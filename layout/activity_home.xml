@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+    <ImageView
+        android:id="@+id/cqupt"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:src="@mipmap/cqupt_foreground"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
+        android:layout_width="310dp"
+        android:layout_height="318dp"
+        android:text="         2005 年 10 ⽉ 9 ⽇下午 2:30，重庆市⼈⺠政府新闻办公室在重庆市新闻发布中⼼举⾏了新闻发布
+会。会议郑重发布了 “世界第⼀颗 0.13 微⽶⼯艺的 TD-SCDMA 3G ⼿机核⼼芯⽚在重庆诞⽣” 这⼀
+令国⼈⾃豪和骄傲的重⼤喜讯。重庆市⼈⺠政府新闻办和重庆邮电学院在此间联合宣布：具有我国⾃
+主知识产权的世界⾸枚 “通芯⼀号” 3G ⼿机核⼼芯⽚已由重庆重邮信科股份有限公司（简称重邮信
+科）研发成功，并向媒体⼈⼠展⽰亮相。这是世界上第⼀枚 0.13 微⽶⼯艺的 TD-SCDMA 3G ⼿机基
+带芯⽚。它的诞⽣，标志着我国 3G 通信核⼼芯⽚等关键技术已达到了世界领先⽔平。实现了从 “中国制造” 到 “中国创造” 的跨越。"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cqupt"
+
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+        android:id="@+id/Button5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:icon="@mipmap/orient_foreground"
+        app:iconPadding="0dp"
+        app:iconGravity = "textStart"
+        app:iconSize="60dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
