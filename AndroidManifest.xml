@@ -6,17 +6,17 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/cqupt_foreground"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/cqupt_round"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication1">
+        android:label="6"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity
-
-            android:name=".SignActivity"
-            android:exported="false" />
+            android:name=".vp2Activity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".QQActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
