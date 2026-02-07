@@ -1,5 +1,5 @@
 /**description: 注册界面功能
- * author:漆子君
+ * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/3
  */

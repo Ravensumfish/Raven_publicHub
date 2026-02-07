@@ -10,8 +10,8 @@ package notebook.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import notebook.entity.Note;
 
@@ -43,6 +43,18 @@ public class AppUtils {
         Intent intent = new Intent(context, target);
         intent.putExtra("note", note);
         context.startActivity(intent);
+    }
+
+    //获取当前时间
+    public static String getCurrentTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        Date date = new Date();
+        return simpleDateFormat.format(date);
+    }
+
+    //检查不为空
+    public static boolean isEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
 }

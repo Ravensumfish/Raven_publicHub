@@ -8,15 +8,37 @@
     android:padding="15dp"
     tools:context="notebook.activities.NoteDetailActivity">
 
+    <Button
+        android:id="@+id/back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/btn_back_arrow_selector"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/btn_save_selector"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:padding="20dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,6 +49,7 @@
                 android:id="@+id/note_detail_title"
                 android:background="@color/trans"
                 android:hint="无题"
+                android:textColorHint="@color/gray_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_1"
@@ -64,16 +87,17 @@
             android:background="@color/gray" />
 
         <EditText
+            android:gravity="start|top"
             android:id="@+id/note_detail_content"
-            android:hint="内容"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="25dp"
-            android:background="@color/trans"
+            style="@style/myEditView"
             android:textColor="@color/gray"
             android:textSize="15sp" />
 
-
     </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

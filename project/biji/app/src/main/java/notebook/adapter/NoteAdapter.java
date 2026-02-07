@@ -1,5 +1,5 @@
 /**description: 用于笔记rv的适配器类
- * author:漆子君
+ * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/4
  */
@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.biji.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import notebook.entity.NotePreview;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
-    private final ArrayList<NotePreview> notes;
+    private List<NotePreview> previews;
 
     public interface onItemClickListener{
         void onItemClick(NotePreview notePreview);
@@ -35,13 +35,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         this.itemClickListener = itemClickListener;
     }
 
-    public NoteAdapter(ArrayList<NotePreview> notes) {
-        this.notes = notes;
+    public void refreshData(List<NotePreview> previews) {
+        this.previews = previews;
+        notifyDataSetChanged();
+    }
+
+    public NoteAdapter(List<NotePreview> previews) {
+        this.previews = previews;
     }
 
     @Override
     public int getItemCount() {
-        return notes.size();
+        return previews.size();
     }
 
     @NonNull
@@ -53,7 +58,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-         holder.bind(notes.get(position));
+         holder.bind(previews.get(position));
     }
 
     public class NoteViewHolder extends RecyclerView.ViewHolder {
@@ -76,8 +81,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    NotePreview notePreview = notes.get(pos);
+                    NotePreview notePreview = previews.get(pos);
                     itemClickListener.onItemClick(notePreview);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return false;
                 }
             });
         }

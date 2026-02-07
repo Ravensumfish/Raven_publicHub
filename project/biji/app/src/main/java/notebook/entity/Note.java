@@ -1,19 +1,40 @@
-/**description: 笔记实体类
- * author:漆子君
+/**
+ * description: 笔记实体类
+ * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/2
  */
 
 package notebook.entity;
-
 import java.io.Serializable;
 
 public class Note implements Serializable {
     String title = "无题";
-    String content;
-    String createTime;
-    String updateTime;
-    String wordCount;
+    String content = "";
+    String createTime = "";
+    String updateTime = "";
+    String wordCount = "0";
+    long id;
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                ", wordCount='" + wordCount + '\'' +
+                ", id=" + id +
+                '}';
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Note(String title, String content, String updateTime) {
         this.title = title;
@@ -30,6 +51,10 @@ public class Note implements Serializable {
         this.updateTime = updateTime;
         int wc = content.length();
         this.wordCount = String.valueOf(wc);
+    }
+
+    public Note() {
+
     }
 
     public String getTitle() {
@@ -67,9 +92,11 @@ public class Note implements Serializable {
 
     public String getWordCount() {
         return wordCount;
+
     }
 
     public void setWordCount(String wordCount) {
         this.wordCount = wordCount;
     }
+
 }

@@ -1,6 +1,6 @@
 /**
  * description: 用户数据库，用于存储用户名与密码，以实现登录功能和后续以用户为“主键”的功能
- * author:漆子君
+ * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/3
  */
@@ -21,8 +21,9 @@ import notebook.entity.User;
 public class UserDB extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "MYSQLiteDB";
+    private static final String USER_TABLE_NAME = "users";
     //后续相关参数名必须和表中设定一致
-    private static final String createUsers = "create table users(username varchar(25) UNIQUE NOT NULL,password varchar(25) NOT NULL)";
+    private static final String createUsers = "create table "+ USER_TABLE_NAME+ "(username varchar(25) UNIQUE NOT NULL,password varchar(25) NOT NULL)";
 
     public UserDB(@Nullable Context context) {
         super(context, DB_NAME, null, 1);
@@ -55,7 +56,7 @@ public class UserDB extends SQLiteOpenHelper {
         } else {
             contentValues.put("username", name);
             contentValues.put("password", password);
-            long users = db.insert("users", null, contentValues);
+            long users = db.insert(USER_TABLE_NAME, null, contentValues);
             //用于检查
             if (users != -1) {
                 Log.d("TAG", "(注册:成功写入UsersDB)-->>");
@@ -70,7 +71,7 @@ public class UserDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         boolean result = false;
         //先在表中查找用户存在（按用户名查找）
-        Cursor users = db.query("users", null, "username = ?", new String[]{username}, null, null, null);
+        Cursor users = db.query(USER_TABLE_NAME, null, "username = ?", new String[]{username}, null, null, null);
         Log.d("TAG", "(users:" + users + ")-->>");
         //再检测账号密码是否匹配，依次遍历匹配
         while (users.moveToNext()) {
