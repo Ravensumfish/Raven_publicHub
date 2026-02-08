@@ -9,19 +9,24 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Biji">
+        android:theme="@style/Theme.Biji"
+        android:supportsRtl="true">
         <activity
             android:name="notebook.activities.NoteDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name="notebook.activities.SignActivity"
+            android:theme="@style/Theme.Biji"
             android:exported="false" />
         <activity
             android:name="notebook.activities.NoteActivity"
+            android:label="目录"
+            android:theme="@style/Theme.NotePreview"
+            android:exported="false" />
+        <activity
+            android:name="notebook.activities.SignActivity"
+            android:theme="@style/Theme.Biji"
             android:exported="false" />
         <activity
             android:name="notebook.activities.LoginActivity"
+            android:theme="@style/Theme.Biji"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

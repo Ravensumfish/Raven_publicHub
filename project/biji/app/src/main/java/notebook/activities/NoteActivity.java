@@ -9,15 +9,20 @@ package notebook.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +34,7 @@ import java.util.List;
 import notebook.adapter.NoteAdapter;
 import notebook.entity.Note;
 import notebook.entity.NotePreview;
+import notebook.helper.MyItemTouchHelperCallBack;
 import notebook.sql.NoteDB;
 import notebook.utils.AppUtils;
 
@@ -38,7 +44,9 @@ public class NoteActivity extends AppCompatActivity {
     RecyclerView mRv;
     NoteAdapter noteAdapter;
     List<NotePreview> mNoteList;
-    NoteDB noteDB ;
+    NoteDB noteDB;
+    ItemTouchHelper mItemTouchHelper;
+    MyItemTouchHelperCallBack mCallBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +62,20 @@ public class NoteActivity extends AppCompatActivity {
         initView();
         initData();
         initRv();
-        initClick();
+        initEvent();
+    }
 
+    private void initEvent() {
+        initClick();
+        refreshData();
+        Log.d("TAG", "(onCreate刷新列表:)-->>");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshData();
+        Log.d("TAG", "(onResume刷新列表:)-->>");
     }
 
     //刷新rv
@@ -80,7 +94,8 @@ public class NoteActivity extends AppCompatActivity {
     private void initData() {
         noteDB = new NoteDB(this);
         mNoteList = new ArrayList<>();
-        noteAdapter = new NoteAdapter(mNoteList);
+        noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList);
+        mCallBack = new MyItemTouchHelperCallBack(noteAdapter);
         Log.d("TAG", "(数据NotePreviewList:成功初始化)-->>");
     }
 
@@ -94,6 +109,8 @@ public class NoteActivity extends AppCompatActivity {
     private void initRv() {
         mRv.setAdapter(noteAdapter);
         mRv.setLayoutManager(new LinearLayoutManager(this));
+        mItemTouchHelper = new ItemTouchHelper(mCallBack);
+        mItemTouchHelper.attachToRecyclerView(mRv);
         Log.d("TAG", "(试试:成功生成rv)-->>");
 
     }
@@ -103,9 +120,9 @@ public class NoteActivity extends AppCompatActivity {
         noteAdapter.setItemClickListener(new NoteAdapter.onItemClickListener() {
             @Override
             public void onItemClick(NotePreview notePreview) {
-                Note note = (Note)notePreview;
-                Log.d("TAG","(列表页笔记id:)-->>" + note.getId());
-                AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class,note);
+                Note note = (Note) notePreview;
+                Log.d("TAG", "(列表页笔记id:)-->>" + note.getId());
+                AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class, note);
             }
         });
 
@@ -117,7 +134,7 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Note note = addNote();
-                AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class,note);
+                AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class, note);
             }
         });
     }
@@ -129,12 +146,12 @@ public class NoteActivity extends AppCompatActivity {
         note.setUpdateTime(AppUtils.getCurrentTime());
         long row = noteDB.insert(note);
         if (row != -1) {
-            Log.d("TAG","(newNote:id)-->>" + note.getId());
+            Log.d("TAG", "(newNote:id)-->>" + note.getId());
             Toast.makeText(NoteActivity.this, "新增笔记成功", Toast.LENGTH_SHORT).show();
             return note;
         } else {
             Toast.makeText(NoteActivity.this, "新增笔记失败", Toast.LENGTH_SHORT).show();
-           return null;
+            return null;
         }
     }
 
@@ -166,4 +183,34 @@ public class NoteActivity extends AppCompatActivity {
         return notePreview;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_note_preview, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<Note> notes = noteDB.query(newText);
+                mNoteList = new ArrayList<>();
+                for (Note note : notes) {
+                    NotePreview notePreview = noteToNotePreview(note);
+                    mNoteList.add(notePreview);
+                }
+                noteAdapter.refreshData(mNoteList);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 }

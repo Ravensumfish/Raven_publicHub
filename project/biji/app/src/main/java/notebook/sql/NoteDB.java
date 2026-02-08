@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import notebook.entity.Note;
+import notebook.utils.AppUtils;
 
 public class NoteDB extends SQLiteOpenHelper {
 
@@ -62,15 +63,17 @@ public class NoteDB extends SQLiteOpenHelper {
     }
 
     //删
-    public void delete(Note note) {
+    public long delete(Note note) {
         SQLiteDatabase db = getWritableDatabase();
         Log.d("TAG", "(id:)-->>" + note.getId());
         int row = db.delete(NOTE_TABLE_NAME, "id = ?", new String[]{String.valueOf(note.getId())});
-        if (row != -1) {
+        if (row > 0) {
             Log.d("TAG", "(数据库notes:成功删除)-->>");
         } else {
             Log.d("TAG", "(数据库notes:删除失败)-->>");
         }
+
+        return row;
     }
 
     //查
@@ -102,12 +105,14 @@ public class NoteDB extends SQLiteOpenHelper {
         return notes;
     }
 
-    //2.按某列查找某note
-    public List<Note> query(String colName, String obj) {
+    //2.按关键词查找某note
+    public List<Note> query(String obj) {
+        if (AppUtils.isEmpty(obj)) {
+            return queryAll();
+        }
         SQLiteDatabase db = getReadableDatabase();
         List<Note> notes = new ArrayList<>();
-        //按输入的列名查找
-        Cursor cursor = db.query(NOTE_TABLE_NAME, null, colName + " = ?", new String[]{obj}, null, null, null);
+        Cursor cursor = db.query(NOTE_TABLE_NAME, null, "title = ? OR content = ?", new String[]{"%" + obj + "%"}, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(0);

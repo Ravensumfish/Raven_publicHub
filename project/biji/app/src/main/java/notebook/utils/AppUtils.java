@@ -57,4 +57,9 @@ public class AppUtils {
         return s == null || s.isEmpty();
     }
 
+    public static String wordCount(String s) {
+        s = s.replaceAll("\\s+","");
+        return String.valueOf(s.length());
+    }
+
 }
