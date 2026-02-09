@@ -14,6 +14,7 @@ public class Note implements Serializable {
     String createTime = "";
     String updateTime = "";
     String wordCount = "0";
+    String author;
     long id;
 
     @Override
@@ -26,6 +27,14 @@ public class Note implements Serializable {
                 ", wordCount='" + wordCount + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public long getId() {

@@ -1,5 +1,5 @@
 /**
- * description: 笔记界面功能
+ * description: 笔记界面功能，滑动与拖拽效果
  * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/8

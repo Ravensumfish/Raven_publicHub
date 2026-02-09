@@ -7,6 +7,7 @@
 
 package notebook.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +48,7 @@ public class NoteActivity extends AppCompatActivity {
     NoteDB noteDB;
     ItemTouchHelper mItemTouchHelper;
     MyItemTouchHelperCallBack mCallBack;
+    String mUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class NoteActivity extends AppCompatActivity {
         Log.d("TAG", "(onCreate刷新列表:)-->>");
     }
 
+    //实时
     @Override
     protected void onResume() {
         super.onResume();
@@ -92,6 +95,8 @@ public class NoteActivity extends AppCompatActivity {
 
     //初始化activity中的相关数据
     private void initData() {
+        Intent intent = getIntent();
+        mUsername = intent.getStringExtra("username");
         noteDB = new NoteDB(this);
         mNoteList = new ArrayList<>();
         noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList);
@@ -121,7 +126,8 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onItemClick(NotePreview notePreview) {
                 Note note = (Note) notePreview;
-                Log.d("TAG", "(列表页笔记id:)-->>" + note.getId());
+                note.setAuthor(mUsername);
+                Log.d("TAG", "(列表页id为"+note.getId()+"的笔记:)-->>" + note);
                 AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class, note);
             }
         });
@@ -142,6 +148,7 @@ public class NoteActivity extends AppCompatActivity {
     //添加新笔记并写进NoteDB
     public Note addNote() {
         Note note = new Note();
+        note.setAuthor(mUsername);
         note.setCreateTime(AppUtils.getCurrentTime());
         note.setUpdateTime(AppUtils.getCurrentTime());
         long row = noteDB.insert(note);
@@ -153,11 +160,6 @@ public class NoteActivity extends AppCompatActivity {
             Toast.makeText(NoteActivity.this, "新增笔记失败", Toast.LENGTH_SHORT).show();
             return null;
         }
-    }
-
-    //获取笔记集合
-    private List<Note> getNotes() {
-        return noteDB.queryAll();
     }
 
     //从NoteDB中获取笔记预览
@@ -179,19 +181,23 @@ public class NoteActivity extends AppCompatActivity {
         notePreview.setTitle(note.getTitle());
         notePreview.setContent(note.getContent());
         notePreview.setWordCount(note.getWordCount());
+        notePreview.setCreateTime(note.getCreateTime());
         notePreview.setUpdateTime(note.getUpdateTime());
         return notePreview;
     }
 
+    //搜索功能
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_note_preview, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            //当搜索栏中文本变化时调用此方法
             @Override
             public boolean onQueryTextChange(String newText) {
                 List<Note> notes = noteDB.query(newText);
-                mNoteList = new ArrayList<>();
+                mNoteList.clear();
                 for (Note note : notes) {
                     NotePreview notePreview = noteToNotePreview(note);
                     mNoteList.add(notePreview);
@@ -200,6 +206,7 @@ public class NoteActivity extends AppCompatActivity {
                 return true;
             }
 
+            //提交时调用，目前用不着，因为搜索是根据文本实时变化的
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;

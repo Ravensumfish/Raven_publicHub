@@ -9,6 +9,7 @@ package notebook.entity;
 import androidx.annotation.NonNull;
 
 public class User{
+    long id;
     String name;
     String password;
 
@@ -17,6 +18,13 @@ public class User{
         this.password = password;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
     public void setName(String name) {
         this.name = name;
     }

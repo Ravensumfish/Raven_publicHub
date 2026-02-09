@@ -112,7 +112,7 @@ public class NoteDB extends SQLiteOpenHelper {
         }
         SQLiteDatabase db = getReadableDatabase();
         List<Note> notes = new ArrayList<>();
-        Cursor cursor = db.query(NOTE_TABLE_NAME, null, "title = ? OR content = ?", new String[]{"%" + obj + "%"}, null, null, null);
+        Cursor cursor = db.query(NOTE_TABLE_NAME, null, "title like ? OR content like ?", new String[]{"%" + obj + "%","%" + obj + "%"}, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(0);
@@ -131,8 +131,8 @@ public class NoteDB extends SQLiteOpenHelper {
                 notes.add(note);
             }
         }
-
         cursor.close();
+        Log.d("TAG","(查找到的notes:)-->>" + notes);
         return notes;
     }
 

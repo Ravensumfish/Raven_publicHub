@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +35,8 @@ import notebook.utils.AppUtils;
 public class NoteDetailActivity extends AppCompatActivity {
 
     EditText etTitle, etContent;
-    TextView tvCreateTime, tvUpdateTime, tvWordCount;
-    Button btnBackArrow, btnSave;
+    TextView tvWordCount;
+    Button btnBackArrow, btnSave, btnMenu;
     Note mNote;
     NoteDB noteDB;
 
@@ -63,18 +65,23 @@ public class NoteDetailActivity extends AppCompatActivity {
 
 
     private void initEvent() {
-        goBack();
-        saveClick();
+        initClick();
         wordCountChange();
     }
 
+    private void initClick() {
+        goBack();
+        saveClick();
+        menuClick();
+    }
 
     private void initView() {
         etTitle = findViewById(R.id.note_detail_title);
         etContent = findViewById(R.id.note_detail_content);
         tvWordCount = findViewById(R.id.note_detail_word_count);
-        btnBackArrow = findViewById(R.id.back);
-        btnSave = findViewById(R.id.save);
+        btnBackArrow = findViewById(R.id.btn_detail_back);
+        btnSave = findViewById(R.id.btn_detail_save);
+        btnMenu = findViewById(R.id.btn_detail_menu);
     }
 
     //初始化activity中的相关数据
@@ -85,6 +92,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         mNote = (Note) intent.getSerializableExtra("note");
         if (mNote != null) {
             Log.d("TAG", "(mNote:id)-->>" + mNote.getId());
+            Log.d("TAG", "(mNote:)-->>" + mNote);
             etTitle.setText(mNote.getTitle());
             etContent.setText(mNote.getContent());
             tvWordCount.setText(mNote.getWordCount());
@@ -156,11 +164,27 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     }
 
+    //保存按钮的功能
     private void saveClick() {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 save();
+            }
+        });
+    }
+
+    //点击后弹出详情页
+    private void menuClick() {
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(NoteDetailActivity.this, v);
+                popupMenu.inflate(R.menu.menu_note_detial);
+                popupMenu.getMenu().findItem(R.id.menu_author).setTitle("作者： " + mNote.getAuthor());
+                popupMenu.getMenu().findItem(R.id.menu_create_time).setTitle("创建时间： " + mNote.getCreateTime());
+                popupMenu.getMenu().findItem(R.id.menu_update_time).setTitle("更新时间： " + mNote.getUpdateTime());
+                popupMenu.show();
             }
         });
     }
