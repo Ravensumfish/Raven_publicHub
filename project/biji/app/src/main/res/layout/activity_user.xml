@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="notebook.activities.UserActivity">
+
+    <notebook.UI.GradientBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_user_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="2dp"
+        android:background="@drawable/btn_back_arrow_selector"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/roundRectView"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bcg_gradient"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_user_back"
+        app:layout_constraintWidth_percent="0.87" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="48dp"
+            app:shapeAppearanceOverlay="@style/CircleShape"
+            android:src="@color/white"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/roundRectView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/roundRectView"
+            />
+
+    <TextView
+        android:id="@+id/user_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:text="用户名"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="@+id/avatar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:text="签名"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/avatar"
+        app:layout_constraintTop_toBottomOf="@id/user_username" />
+
+    <ImageView
+        android:id="@+id/roundRectView2"
+        android:background="@drawable/bcg_gradient"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roundRectView"
+        app:layout_constraintWidth_percent="0.87" />
+
+    <TextView
+        android:id="@+id/user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:text="ID:"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundRectView2"
+        app:layout_constraintEnd_toEndOf="@+id/roundRectView2"
+        app:layout_constraintHorizontal_bias="0.110"
+        app:layout_constraintStart_toStartOf="@+id/roundRectView2"
+        app:layout_constraintTop_toTopOf="@+id/roundRectView2"
+        app:layout_constraintVertical_bias="0.593" />
+
+    <TextView
+        android:layout_width="156dp"
+        android:layout_height="28dp"
+        android:text="123456"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/roundRectView2"
+        app:layout_constraintStart_toEndOf="@id/user_id"
+        app:layout_constraintTop_toTopOf="@+id/roundRectView2"
+        app:layout_constraintVertical_bias="0.593" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

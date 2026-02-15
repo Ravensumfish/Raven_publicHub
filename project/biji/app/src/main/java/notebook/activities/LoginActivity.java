@@ -25,6 +25,7 @@ import com.example.biji.R;
 import com.google.android.material.textfield.TextInputEditText;
 import notebook.sql.UserDB;
 import notebook.utils.AppUtils;
+import notebook.utils.SPUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mUsername, mPassword;
 
     private TextView tv_tip;
+    SharedPreferences sp;
 
 
     @Override
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         initView();
+        initData();
         checkBoxFunction2();
 
         UserDB mySQLiteOpenHelper = new UserDB(this);
@@ -65,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                     //判断checkBox
                     checkBoxFunction1();
                     //跳转主界面
-                    AppUtils.startActivity(LoginActivity.this, NoteActivity.class, mUsername);
+                    AppUtils.startActivity(LoginActivity.this, HomeActivity.class, mUsername);
                 } else {
                     //失败则弹窗提示
                     Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
@@ -79,6 +82,10 @@ public class LoginActivity extends AppCompatActivity {
                 AppUtils.startActivity(LoginActivity.this, SignActivity.class);
             }
         });
+    }
+
+    private void initData() {
+        sp = SPUtils.getSpData(LoginActivity.this);
     }
 
     public void initView() {
@@ -100,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkBoxFunction1() {
-        SharedPreferences sp = getSharedPreferences("spData", MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         if (cb_remember.isChecked()) {
             edit.putString("password", mPassword);
@@ -123,7 +129,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkBoxFunction2() {
-        SharedPreferences sp = getSharedPreferences("spData", MODE_PRIVATE);
 
         if (sp.getBoolean("isAutoLogin", false)) {
             String username = sp.getString("username", null);

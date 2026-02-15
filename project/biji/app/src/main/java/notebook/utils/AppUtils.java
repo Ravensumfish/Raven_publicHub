@@ -1,6 +1,6 @@
 /**
  * description: 封装一些工具
- * author:漆子君
+ * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/2
  */
@@ -10,6 +10,8 @@ package notebook.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,6 +34,7 @@ public class AppUtils {
         }
         Intent intent = new Intent(context, target);
         intent.putExtra("username", username);
+        Log.d("TAG","(NoteDB_username:)-->>" + username);
         context.startActivity(intent);
     }
 
@@ -57,6 +60,7 @@ public class AppUtils {
         return s == null || s.isEmpty();
     }
 
+    //用于计算字数，不算空格
     public static String wordCount(String s) {
         s = s.replaceAll("\\s+","");
         return String.valueOf(s.length());

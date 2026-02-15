@@ -101,6 +101,10 @@ public class NoteActivity extends AppCompatActivity {
         mNoteList = new ArrayList<>();
         noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList);
         mCallBack = new MyItemTouchHelperCallBack(noteAdapter);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        Log.d("TAG", "(mUsername)-->>" + mUsername);
         Log.d("TAG", "(数据NotePreviewList:成功初始化)-->>");
     }
 
@@ -127,7 +131,7 @@ public class NoteActivity extends AppCompatActivity {
             public void onItemClick(NotePreview notePreview) {
                 Note note = (Note) notePreview;
                 note.setAuthor(mUsername);
-                Log.d("TAG", "(列表页id为"+note.getId()+"的笔记:)-->>" + note);
+                Log.d("TAG", "(列表页id为" + note.getId() + "的笔记:)-->>" + note);
                 AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class, note);
             }
         });
@@ -216,8 +220,14 @@ public class NoteActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //当点击到actionBar的返回键时调用
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+
     }
 }
