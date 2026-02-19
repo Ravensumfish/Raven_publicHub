@@ -43,6 +43,7 @@ public class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback {
     }
 
 
+    //滑动时方法
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int pos = viewHolder.getAdapterPosition();

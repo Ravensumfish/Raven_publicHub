@@ -1,5 +1,5 @@
 /**
- * description: 渐变圆角矩形
+ * description: 渐变圆角矩形（废
  * author:Manticore
  * email:3100776336@qq.com
  * date:2026/2/11
@@ -26,7 +26,7 @@ public class RoundRectView extends View {
     private Paint paint;
     private RectF rectF;
     private int height;
-    private float cornerRadius = 30;
+    private float cornerRadius = 20;
     private int startColor;
     private int endColor;
     LinearGradient gradient;
@@ -71,9 +71,10 @@ public class RoundRectView extends View {
         rectF = new RectF();
         //设置抗锯齿
         paint.setAntiAlias(true);
-        paint.setAlpha(230);
-        startColor = ContextCompat.getColor(getContext(), R.color.light_yellow);
-        endColor = ContextCompat.getColor(getContext(), R.color.blue_3);
+        //笔刷不透明度
+        paint.setAlpha(200);
+        startColor = ContextCompat.getColor(getContext(), R.color.blue_3);
+        endColor = ContextCompat.getColor(getContext(), R.color.white);
     }
     private void gradient() {
 

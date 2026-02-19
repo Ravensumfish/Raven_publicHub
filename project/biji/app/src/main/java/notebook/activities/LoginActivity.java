@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
     private void checkBoxFunction1() {
         SharedPreferences.Editor edit = sp.edit();
         if (cb_remember.isChecked()) {
+            edit.putString("username", mUsername);
             edit.putString("password", mPassword);
             edit.putBoolean("isRemember", true);
             Log.d("TAG","(已记住密码)-->>");

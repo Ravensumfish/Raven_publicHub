@@ -24,14 +24,5 @@ public class NotePreview extends Note{
         this.icon = icon;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "NotePreview{" +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", wordCount='" + wordCount + '\'' +
-                '}';
-    }
+
 }

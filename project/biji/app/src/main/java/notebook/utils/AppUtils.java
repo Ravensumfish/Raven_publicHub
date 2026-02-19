@@ -8,14 +8,19 @@
 package notebook.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import notebook.entity.Note;
+import notebook.entity.NotePreview;
+import notebook.sql.NoteDB;
 
 public class AppUtils {
     //跳转
@@ -34,7 +39,7 @@ public class AppUtils {
         }
         Intent intent = new Intent(context, target);
         intent.putExtra("username", username);
-        Log.d("TAG","(NoteDB_username:)-->>" + username);
+        Log.d("TAG", "(NoteDB_username:)-->>" + username);
         context.startActivity(intent);
     }
 
@@ -62,8 +67,23 @@ public class AppUtils {
 
     //用于计算字数，不算空格
     public static String wordCount(String s) {
-        s = s.replaceAll("\\s+","");
+        s = s.replaceAll("\\s+", "");
         return String.valueOf(s.length());
     }
+
+    public static boolean isChanged(String pre, String aft) {
+        if (pre.equals(aft)) {
+            return false;
+        }
+        return true;
+    }
+
+    //提前测量目标view的高度
+    public static int getHeight(View v) {
+        v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        return v.getMeasuredHeight();
+    }
+
 
 }

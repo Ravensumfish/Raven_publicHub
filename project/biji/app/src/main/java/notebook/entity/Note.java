@@ -9,13 +9,15 @@ package notebook.entity;
 import java.io.Serializable;
 
 public class Note implements Serializable {
-    String title = "无题";
-    String content = "";
-    String createTime = "";
-    String updateTime = "";
-    String wordCount = "0";
-    String author;
-    long id;
+    private String title = "无题";
+    private String content = "";
+    private String createTime = "";
+    private String updateTime = "";
+    private String wordCount = "0";
+    private String author;
+    private long id;
+
+
 
     @Override
     public String toString() {

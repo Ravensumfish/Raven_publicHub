@@ -10,9 +10,11 @@ package notebook.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -91,6 +93,7 @@ public class NoteActivity extends AppCompatActivity {
     private void initView() {
         mBtn = findViewById(R.id.button_note);
         mRv = findViewById(R.id.rv_note);
+        setMargin();
     }
 
     //初始化activity中的相关数据
@@ -107,6 +110,7 @@ public class NoteActivity extends AppCompatActivity {
         Log.d("TAG", "(mUsername)-->>" + mUsername);
         Log.d("TAG", "(数据NotePreviewList:成功初始化)-->>");
     }
+
 
     //封装点击事件
     private void initClick() {
@@ -229,5 +233,24 @@ public class NoteActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    //获取actionbar高度
+    public int getActionBarHeight() {
+        TypedValue typedValue = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+            return TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
+        }
+        return 0 ;
+    }
+
+    //为rv设置top margin，防止被遮挡
+    private void setMargin() {
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRv.getLayoutParams();
+        params.topMargin = getActionBarHeight();
+        Log.d("TAG","(actionBarHeight:)-->>" + params.topMargin + "px");
+        if (params.topMargin != 0) {
+            mRv.setLayoutParams(params);
+        }
     }
 }

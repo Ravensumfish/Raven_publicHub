@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,13 +36,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-
 import notebook.utils.SPUtils;
 
 public class UserActivity extends AppCompatActivity {
 
-    String username, id, introduce;
+    String username;
+    TextView introduce,id;
+    Button btn_edit;
     TextView mUsername;
     ImageView avatar;
     Button btn_back;
@@ -83,15 +84,22 @@ public class UserActivity extends AppCompatActivity {
 
     //从相册中选取头像
     private void choosePhoto() {
-        //判断权限
-        if (ContextCompat.checkSelfPermission(UserActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            selectImage.launch("image/*");
+        String permission;
 
-
-        } else {
-            resultLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permission = Manifest.permission.READ_MEDIA_IMAGES;
+        } else{
+            permission = Manifest.permission.READ_EXTERNAL_STORAGE;
         }
+            //判断权限
+            if (ContextCompat.checkSelfPermission(UserActivity.this, permission) == PackageManager.PERMISSION_GRANTED) {
+                selectImage.launch("image/*");
+
+
+            } else {
+                resultLauncher.launch(permission);
+
+            }
     }
 
 
@@ -99,6 +107,7 @@ public class UserActivity extends AppCompatActivity {
         mUsername = findViewById(R.id.user_username);
         btn_back = findViewById(R.id.btn_user_back);
         avatar = findViewById(R.id.avatar);
+        introduce = findViewById(R.id.introduce);
     }
 
     private void initData() {
@@ -137,30 +146,22 @@ public class UserActivity extends AppCompatActivity {
 
     //相册权限是暂时的，需要及时把用户选择的图片保存下来放入app内部存储，否则原路径失效，页面会崩
     private String copyToMyFile(Uri uri) throws IOException {
-        File file = getFilesDir();
-        File imageFile = new File(file, "my_avatar.jpg");
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try {
-            inputStream = getContentResolver().openInputStream(uri);
-            outputStream = new FileOutputStream(imageFile);
+        File filesDir = getFilesDir();
+        File imageFile = new File(filesDir, "my_avatar.jpg");
+        try (FileOutputStream outputStream = new FileOutputStream(imageFile);
+             InputStream inputStream = getContentResolver().openInputStream(uri)) {
+
             byte[] buffer = new byte[1024];
+
             if (inputStream != null) {
                 int length;
                 while ((length = inputStream.read(buffer)) > 0) {
                     outputStream.write(buffer, 0, length);
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
-
         }
         return imageFile.getAbsolutePath();
     }
