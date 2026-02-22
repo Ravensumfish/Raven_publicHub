@@ -8,6 +8,7 @@
 package notebook.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -36,10 +37,14 @@ import java.util.List;
 
 import notebook.adapter.NoteAdapter;
 import notebook.entity.Note;
+import notebook.entity.NoteGroup;
 import notebook.entity.NotePreview;
+import notebook.entity.User;
 import notebook.helper.MyItemTouchHelperCallBack;
 import notebook.sql.NoteDB;
+import notebook.sql.UserDB;
 import notebook.utils.AppUtils;
+import notebook.utils.SPUtils;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -50,7 +55,14 @@ public class NoteActivity extends AppCompatActivity {
     NoteDB noteDB;
     ItemTouchHelper mItemTouchHelper;
     MyItemTouchHelperCallBack mCallBack;
+    SharedPreferences mSp;
     String mUsername;
+    int userId;
+    int groupId;
+    long noteId;
+    NoteGroup mGroup;
+    User user;
+    UserDB userDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +110,28 @@ public class NoteActivity extends AppCompatActivity {
 
     //初始化activity中的相关数据
     private void initData() {
+        mSp = SPUtils.getSpData(this);
         Intent intent = getIntent();
-        mUsername = intent.getStringExtra("username");
+        groupId = intent.getIntExtra("group_id", -1);
+        userId = mSp.getInt("user_id", -1);
+
+        userDB = new UserDB(this);
+        user = userDB.getUserById(userId);
+        mUsername = user.getName();
+
         noteDB = new NoteDB(this);
+        mGroup = noteDB.queryGroupById(groupId, userId);
+
         mNoteList = new ArrayList<>();
-        noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList);
+        noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList, userId);
         mCallBack = new MyItemTouchHelperCallBack(noteAdapter);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(mGroup.getTitle());
         }
         Log.d("TAG", "(mUsername)-->>" + mUsername);
+        Log.d("TAG", "(userid:)-->>" + userId);
+        Log.d("TAG", "(groupId:)-->>" + groupId);
         Log.d("TAG", "(数据NotePreviewList:成功初始化)-->>");
     }
 
@@ -133,10 +157,9 @@ public class NoteActivity extends AppCompatActivity {
         noteAdapter.setItemClickListener(new NoteAdapter.onItemClickListener() {
             @Override
             public void onItemClick(NotePreview notePreview) {
-                Note note = (Note) notePreview;
-                note.setAuthor(mUsername);
-                Log.d("TAG", "(列表页id为" + note.getId() + "的笔记:)-->>" + note);
-                AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class, note);
+
+                Log.d("TAG", "(列表页id为" + notePreview.getId() + "的笔记:)-->>" + notePreview);
+                AppUtils.startActivityWithNoteId(NoteActivity.this, NoteDetailActivity.class, notePreview.getId());
             }
         });
 
@@ -148,7 +171,7 @@ public class NoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Note note = addNote();
-                AppUtils.startActivity(NoteActivity.this, NoteDetailActivity.class, note);
+                AppUtils.startActivityWithNoteId(NoteActivity.this, NoteDetailActivity.class, note.getId());
             }
         });
     }
@@ -156,10 +179,10 @@ public class NoteActivity extends AppCompatActivity {
     //添加新笔记并写进NoteDB
     public Note addNote() {
         Note note = new Note();
-        note.setAuthor(mUsername);
         note.setCreateTime(AppUtils.getCurrentTime());
         note.setUpdateTime(AppUtils.getCurrentTime());
-        long row = noteDB.insert(note);
+        note.setGroupId(groupId);
+        long row = noteDB.insert(note, userId);
         if (row != -1) {
             Log.d("TAG", "(newNote:id)-->>" + note.getId());
             Toast.makeText(NoteActivity.this, "新增笔记成功", Toast.LENGTH_SHORT).show();
@@ -173,7 +196,7 @@ public class NoteActivity extends AppCompatActivity {
     //从NoteDB中获取笔记预览
     private List<NotePreview> getNotePreviewsFromDB() {
         List<NotePreview> notePreviews = new ArrayList<>();
-        List<Note> notes = noteDB.queryAll();
+        List<Note> notes = noteDB.queryGroupItemAll(groupId, userId);
         for (Note note : notes) {
             NotePreview notePreview = noteToNotePreview(note);
             notePreviews.add(notePreview);
@@ -204,7 +227,7 @@ public class NoteActivity extends AppCompatActivity {
             //当搜索栏中文本变化时调用此方法
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<Note> notes = noteDB.query(newText);
+                List<Note> notes = noteDB.queryGroupItem(newText,groupId,userId);
                 mNoteList.clear();
                 for (Note note : notes) {
                     NotePreview notePreview = noteToNotePreview(note);
@@ -241,14 +264,14 @@ public class NoteActivity extends AppCompatActivity {
         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
             return TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
         }
-        return 0 ;
+        return 0;
     }
 
     //为rv设置top margin，防止被遮挡
     private void setMargin() {
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mRv.getLayoutParams();
         params.topMargin = getActionBarHeight();
-        Log.d("TAG","(actionBarHeight:)-->>" + params.topMargin + "px");
+        Log.d("TAG", "(actionBarHeight:)-->>" + params.topMargin + "px");
         if (params.topMargin != 0) {
             mRv.setLayoutParams(params);
         }

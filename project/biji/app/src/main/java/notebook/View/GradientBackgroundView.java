@@ -5,7 +5,7 @@
  * date:2026/2/11
  */
 
-package notebook.UI;
+package notebook.View;
 
 import android.content.Context;
 import android.graphics.Canvas;

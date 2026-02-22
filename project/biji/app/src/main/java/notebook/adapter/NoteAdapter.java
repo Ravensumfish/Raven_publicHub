@@ -35,10 +35,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     private Context mContext;
     private List<NotePreview> previews;
     private NoteDB noteDB;
+    private int userId;
 
-    public NoteAdapter(Context mContext, List<NotePreview> previews) {
+    public NoteAdapter(Context mContext, List<NotePreview> previews,int userId) {
         this.mContext = mContext;
         this.previews = previews;
+        this.userId = userId;
         noteDB = new NoteDB(mContext);
     }
 
@@ -60,7 +62,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 .setPositiveButton("确认", (dialog, which) ->
                 {
                     NotePreview notePreview = previews.get(pos);
-                    long row = noteDB.delete(notePreview);
+                    long row = noteDB.delete(notePreview,userId);
                     previews.remove(pos);
                     notifyItemRemoved(pos);
                     if (row > 0) {

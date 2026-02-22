@@ -8,19 +8,27 @@
 package notebook.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.example.biji.databinding.DialogEditIntroduceBinding;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import notebook.activities.UserActivity;
 import notebook.entity.Note;
-import notebook.entity.NotePreview;
-import notebook.sql.NoteDB;
 
 public class AppUtils {
     //跳转
@@ -32,24 +40,45 @@ public class AppUtils {
         context.startActivity(intent);
     }
 
-    //用户名之后还会用，所以写个带数据的活动跳转
-    public static void startActivity(Context context, Class<? extends Activity> target, String username) {
+    //写个带数据的活动跳转,用户跳转
+    public static void startActivityWithUserId(Context context, Class<? extends Activity> target, int userId) {
         if (context == null || target == null) {
             return;
         }
         Intent intent = new Intent(context, target);
-        intent.putExtra("username", username);
-        Log.d("TAG", "(NoteDB_username:)-->>" + username);
+        intent.putExtra("user_id",userId);
+        Log.d("TAG", "(UserIntent_userId:)-->>" + userId);
+        context.startActivity(intent);
+    }
+
+    public static void startActivityWithNoteId(Context context, Class<? extends Activity> target, long noteId) {
+        if (context == null || target == null) {
+            return;
+        }
+        Intent intent = new Intent(context, target);
+        intent.putExtra("note_id",noteId);
+        Log.d("TAG", "(UserIntent_userId:)-->>" + noteId);
+        context.startActivity(intent);
+    }
+
+    public static void startActivityWithGroupId(Context context, Class<? extends Activity> target, int groupId) {
+        if (context == null || target == null) {
+            return;
+        }
+        Intent intent = new Intent(context, target);
+        intent.putExtra("group_id",groupId);
+        Log.d("TAG", "(NoteGroupIntent_GroupId:)-->>" + groupId);
         context.startActivity(intent);
     }
 
     //带笔记实体的跳转
-    public static void startActivity(Context context, Class<? extends Activity> target, Note note) {
+    public static void startActivityWithNote(Context context, Class<? extends Activity> target, Note note) {
         if (context == null || target == null) {
             return;
         }
         Intent intent = new Intent(context, target);
         intent.putExtra("note", note);
+        Log.d("TAG", "(NoteIntent:note)-->>" + note);
         context.startActivity(intent);
     }
 
@@ -85,5 +114,47 @@ public class AppUtils {
         return v.getMeasuredHeight();
     }
 
+    public static void splitTextToPages(String text, int singleLineMax, List<String> pages) {
+        pages.clear();
+        List<String> lines = new ArrayList<>();
+        StringBuilder currentLine = new StringBuilder();
+        StringBuilder page = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            //换行符换行
+            if (c == '\n') {
+                lines.add(currentLine.toString());
+                Log.d("TAG", "(toLine:currentLine/n)-->>" + currentLine);
+                currentLine.setLength(0);
+            } else if (currentLine.length() <= singleLineMax) {
+                //无换行符且字数不满则追加
+                currentLine.append(c);
+            } else {
+                //无换行符，但字数超了，成一行，加新行
+                lines.add(currentLine.toString());
+                Log.d("TAG", "(toLine:currentLine/max)-->>" + currentLine);
+                currentLine.setLength(0);
+                currentLine.append(c);
+            }
+        }
+
+        if (currentLine.length() > 0) {
+            lines.add(currentLine.toString());
+            Log.d("TAG", "(toLine:currentLine/end)-->>" + currentLine);
+        }
+
+
+        for (int j = 0; j < lines.size(); j++) {
+            page.append(lines.get(j)).append('\n');
+            if ((j + 1) % 4 == 0 || j == lines.size() - 1) {
+                pages.add(page.toString());
+                Log.d("TAG", "(toLine:currentPage)-->>" + page);
+                page.setLength(0);
+            }
+        }
+
+    }
 
 }
+
+

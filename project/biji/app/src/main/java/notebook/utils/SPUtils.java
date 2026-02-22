@@ -19,10 +19,19 @@ public class SPUtils {
         return context.getSharedPreferences("spData", MODE_PRIVATE);
     }
 
-    public static void edit(SharedPreferences sp,String key, String obj) {
+    public static void editString(SharedPreferences sp, String key, String value) {
         if (sp != null) {
             SharedPreferences.Editor edit = sp.edit();
-            edit.putString(key, obj).apply();
+            edit.putString(key, value).apply();
+        } else {
+            Log.d("TAG","(SPUtils:edit)-->>" + "写入失败，sp为null");
+        }
+    }
+
+    public static void editInt(SharedPreferences sp, String key, int value) {
+        if (sp != null) {
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putInt(key, value).apply();
         } else {
             Log.d("TAG","(SPUtils:edit)-->>" + "写入失败，sp为null");
         }

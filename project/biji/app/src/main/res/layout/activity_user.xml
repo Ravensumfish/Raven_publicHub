@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="notebook.activities.UserActivity">
 
-    <notebook.UI.GradientBackgroundView
+    <notebook.View.GradientBackgroundView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -63,17 +63,17 @@
 
 
     <TextView
-        android:id="@+id/introduce"
-        android:layout_width="180dp"
+        android:id="@+id/tv_user_introduce"
+        android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:maxLines="2"
-        android:text="签名"
+        android:hint="签名"
+        android:clickable="true"
         android:textColor="@color/gray_blue"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/roundRectView"
         app:layout_constraintHorizontal_bias="0.235"
-        app:layout_constraintLeft_toRightOf="@id/avatar"
         app:layout_constraintRight_toRightOf="@+id/roundRectView"
         app:layout_constraintStart_toStartOf="@+id/user_username"
         app:layout_constraintTop_toBottomOf="@id/user_username"
@@ -91,7 +91,7 @@
         app:layout_constraintWidth_percent="0.87" />
 
     <TextView
-        android:id="@+id/user_id"
+        android:id="@+id/tv_user_ID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ID:"
@@ -104,7 +104,7 @@
         app:layout_constraintTop_toTopOf="@+id/roundRectView2" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_user_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -113,7 +113,7 @@
         android:textColor="@color/gray_blue"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/roundRectView2"
-        app:layout_constraintStart_toEndOf="@id/user_id"
+        app:layout_constraintStart_toEndOf="@id/tv_user_ID"
         app:layout_constraintTop_toTopOf="@+id/roundRectView2"
         app:layout_constraintVertical_bias="0.5" />
 

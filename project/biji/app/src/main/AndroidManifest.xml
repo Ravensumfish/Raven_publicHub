@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,13 +13,19 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Biji">
         <activity
-            android:name="notebook.activities.UserActivity"
-            android:label="个人主页"
+            android:name="notebook.activities.NoteVp2Activity"
+            android:label="目录"
+            android:theme="@style/Theme.NotePreview"
             android:exported="false" />
+        <activity
+            android:name="notebook.activities.UserActivity"
+            android:exported="false"
+            android:label="个人主页" />
         <activity
             android:name="notebook.activities.HomeActivity"
             android:exported="false"
@@ -27,10 +33,10 @@
             android:theme="@style/Theme.Biji" />
         <activity
             android:name="notebook.activities.NoteDetailActivity"
-            android:windowSoftInputMode="adjustResize"
             android:exported="false"
             android:label="笔记编辑页"
-            android:theme="@style/Theme.Biji" />
+            android:theme="@style/Theme.Biji"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="notebook.activities.NoteActivity"
             android:exported="false"

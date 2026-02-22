@@ -23,7 +23,10 @@ public class UserDB extends SQLiteOpenHelper {
     private static final String DB_NAME = "MYSQLiteDB";
     private static final String USER_TABLE_NAME = "users";
     //后续相关参数名必须和表中设定一致
-    private static final String createUsers = "create table "+ USER_TABLE_NAME+ "(username varchar(25) UNIQUE NOT NULL,password varchar(25) NOT NULL)";
+    private static final String createUsers = "create table " + USER_TABLE_NAME +
+            "(username varchar(25) UNIQUE NOT NULL," +
+            "password varchar(25) NOT NULL," +
+            "user_id INTEGER PRIMARY KEY AUTOINCREMENT)";
 
     public UserDB(@Nullable Context context) {
         super(context, DB_NAME, null, 1);
@@ -50,7 +53,7 @@ public class UserDB extends SQLiteOpenHelper {
 
         Log.d("TAG", "(name:" + name + ")-->>");
         Log.d("TAG", "(password:" + password + ")-->>");
-    //用户名和密码不能为空
+        //用户名和密码不能为空
         if (name.isEmpty() || password.isEmpty()) {
             return -1;
         } else {
@@ -66,23 +69,41 @@ public class UserDB extends SQLiteOpenHelper {
             return users;
         }
     }
+
     //实现用户登录
-    public boolean login(String username, String password) {
+    public int login(String username, String password) {
         SQLiteDatabase db = getReadableDatabase();
-        boolean result = false;
+        int userId = -1;
         //先在表中查找用户存在（按用户名查找）
         Cursor users = db.query(USER_TABLE_NAME, null, "username = ?", new String[]{username}, null, null, null);
         Log.d("TAG", "(users:" + users + ")-->>");
-        //再检测账号密码是否匹配，依次遍历匹配
+        //再检测密码是否匹配，依次遍历匹配
         while (users.moveToNext()) {
             //索引从0开始，密码列对应索引为1
             String pwd = users.getString(1);
             if (password.equals(pwd)) {
-                result = true;
+                userId = users.getInt(2);
             }
         }
-        Log.d("TAG", "(登录判断:" + result + ")-->>");
+        Log.d("TAG", "(登录判断:)-->>" + userId);
         users.close();
-        return result;
+        return userId;
+    }
+
+    //获取用户
+    public User getUserById(int userId) {
+        SQLiteDatabase db = getReadableDatabase();
+        String username = null;
+        int id = -1;
+        Cursor cursor = db.query(USER_TABLE_NAME, null, "user_id = ?", new String[]{String.valueOf(userId)}, null, null, null);
+        if (cursor.moveToNext()) {
+            username = cursor.getString(0);
+            id = cursor.getInt(2);
+        }
+        cursor.close();
+
+        if (username == null || id < 0)return null;
+
+        return new User(username, userId);
     }
 }

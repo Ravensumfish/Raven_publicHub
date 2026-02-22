@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.biji.R;
 import com.google.android.material.textfield.TextInputEditText;
+
 import notebook.sql.UserDB;
 import notebook.utils.AppUtils;
 import notebook.utils.SPUtils;
@@ -38,7 +39,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView tv_tip;
     SharedPreferences sp;
-
+    int userId;
+    UserDB userDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +56,26 @@ public class LoginActivity extends AppCompatActivity {
         initView();
         initData();
         checkBoxFunction2();
+        initClick();
 
-        UserDB mySQLiteOpenHelper = new UserDB(this);
+    }
 
+    private void initClick() {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 initVariable();
-                if (mySQLiteOpenHelper.login(mUsername, mPassword)) {
-                    //登录成功
+                userId = userDB.login(mUsername, mPassword);
+                if (userId > 0) {
+                    //登录成功,进行存档
+                    SPUtils.editInt(sp,"user_id", userId);
                     Log.d("TAG","登录成功-->>");
                     //判断checkBox
                     checkBoxFunction1();
                     //跳转主界面
-                    AppUtils.startActivity(LoginActivity.this, HomeActivity.class, mUsername);
+
+                    AppUtils.startActivityWithUserId(LoginActivity.this, HomeActivity.class, userId);
                 } else {
                     //失败则弹窗提示
                     Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
@@ -86,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initData() {
         sp = SPUtils.getSpData(LoginActivity.this);
+        userDB = new UserDB(this);
     }
 
     public void initView() {
@@ -133,9 +141,15 @@ public class LoginActivity extends AppCompatActivity {
 
         if (sp.getBoolean("isAutoLogin", false)) {
             String username = sp.getString("username", null);
-            cb_auto_login.setChecked(true);
-            Log.d("TAG","(自动登录成功)-->>"+"username: "+username);
-            //AppUtils.startActivity(LoginActivity.this, NoteActivity.class, username);
+            String password = sp.getString("password", null);
+            int userId = userDB.login(username, password);
+            if (userId > 0) {
+                SPUtils.editInt(sp,"user_id",userId);
+                cb_auto_login.setChecked(true);
+                Log.d("TAG","(自动登录成功)-->>"+"user "+userId);
+                AppUtils.startActivityWithUserId(LoginActivity.this, HomeActivity.class, userId);
+            }
+
         }
 
         if (sp.getBoolean("isRemember", false)) {

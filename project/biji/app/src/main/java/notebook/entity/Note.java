@@ -14,10 +14,17 @@ public class Note implements Serializable {
     private String createTime = "";
     private String updateTime = "";
     private String wordCount = "0";
-    private String author;
     private long id;
+    private int groupId = -1;
 
 
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
 
     @Override
     public String toString() {
@@ -28,16 +35,10 @@ public class Note implements Serializable {
                 ", updateTime='" + updateTime + '\'' +
                 ", wordCount='" + wordCount + '\'' +
                 ", id=" + id +
+                ", groupId=" + groupId +
                 '}';
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     public long getId() {
         return id;

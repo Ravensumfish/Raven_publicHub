@@ -5,7 +5,7 @@
  * date:2026/2/11
  */
 
-package notebook.UI;
+package notebook.View;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -72,7 +72,7 @@ public class RoundRectView extends View {
         //设置抗锯齿
         paint.setAntiAlias(true);
         //笔刷不透明度
-        paint.setAlpha(200);
+        paint.setAlpha(220);
         startColor = ContextCompat.getColor(getContext(), R.color.blue_3);
         endColor = ContextCompat.getColor(getContext(), R.color.white);
     }

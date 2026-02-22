@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="作者："
         android:id="@+id/menu_author"/>
 
@@ -8,5 +9,14 @@
 
     <item android:title="更新时间："
         android:id="@+id/menu_update_time"/>
+
+    <item android:title="组：无"
+        android:id="@+id/menu_group"/>
+
+    <item android:title="添加进组"
+        android:id="@+id/menu_to_group"/>
+
+    <item android:title="删除笔记"
+        android:id="@+id/menu_delete" />
 
 </menu>
