@@ -7,8 +7,10 @@
 
 package notebook.AI;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.example.biji.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -23,11 +25,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class APIClient {
-    private final String API_KEY = "sk-833d1e4956a14542959970382b6dd966";
+
+    private Context context;
+    private final String API_KEY;
     private final OkHttpClient client;
     private final Gson gson = new Gson();
 
-    public APIClient() {
+    public APIClient(Context context) {
+        this.context = context;
+        API_KEY = context.getString(R.string.api);
         client = new OkHttpClient.Builder()
                 .connectTimeout(6, TimeUnit.SECONDS)
                 .readTimeout(20,TimeUnit.SECONDS).build();

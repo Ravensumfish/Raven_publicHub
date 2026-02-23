@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<item
+    android:id="@+id/menu_group_search"
+    android:icon="@drawable/baseline_search_24"
+    android:title="search"
+    app:actionViewClass="androidx.appcompat.widget.SearchView"
+    app:showAsAction="always"/>
+
+    <item android:id="@+id/menu_group_more"
+        android:icon="@drawable/baseline_more_vert_24"
+        android:iconTint="@color/white"
+        app:tint ="@color/white"
+        android:title="more"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:title="编辑标题"
+                android:id="@+id/menu_group_title_edit" />
+            <item android:title="删除分组及笔记"
+                android:id="@+id/menu_group_delete"/>
+        </menu>
+    </item>
+
+</menu>

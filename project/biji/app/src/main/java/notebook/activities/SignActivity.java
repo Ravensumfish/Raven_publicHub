@@ -24,7 +24,7 @@ import notebook.entity.User;
 import notebook.sql.UserDB;
 
 public class SignActivity extends AppCompatActivity {
-    private Button btn;
+    private Button btn,btnBack;
     private TextInputEditText etUsername;
     private TextInputEditText etPassword;
 
@@ -41,6 +41,13 @@ public class SignActivity extends AppCompatActivity {
 
         UserDB mySQLiteOpenHelper = new UserDB(this);
         initView();
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +75,7 @@ public class SignActivity extends AppCompatActivity {
     public void initView() {
 
         btn = findViewById(R.id.button_sign);
+        btnBack = findViewById(R.id.btn_sign_back);
         etUsername = findViewById(R.id.uname_sign);
         etPassword = findViewById(R.id.password_sign);
 

@@ -17,6 +17,7 @@ public class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback {
 
     private ItemMoveListener itemMoveListener;
     private NoteAdapter noteAdapter;
+    boolean isMoved = false;
 
     public MyItemTouchHelperCallBack(NoteAdapter noteAdapter) {
         this.itemMoveListener = noteAdapter;
@@ -39,7 +40,8 @@ public class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback {
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         int fromPos = viewHolder.getAdapterPosition();
         int toPos = target.getAdapterPosition();
-        return itemMoveListener.onItemMove(fromPos, toPos);
+        isMoved = itemMoveListener.onItemMove(fromPos, toPos);
+        return isMoved;
     }
 
 
@@ -50,5 +52,15 @@ public class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback {
         noteAdapter.notifyItemChanged(pos);
         itemMoveListener.onItemRemove(pos);
 
+    }
+
+    @Override
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        //当移动完成(拖动排序)后通知
+        if (isMoved) {
+            itemMoveListener.itemMoveFinished();
+            isMoved = false;
+        }
     }
 }

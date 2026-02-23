@@ -7,15 +7,21 @@
 
 package notebook.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -31,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.biji.R;
+import com.example.biji.databinding.DialogNoteGroupEditBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +130,7 @@ public class NoteActivity extends AppCompatActivity {
         mGroup = noteDB.queryGroupById(groupId, userId);
 
         mNoteList = new ArrayList<>();
-        noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList, userId);
+        noteAdapter = new NoteAdapter(NoteActivity.this, mNoteList, userId,groupId);
         mCallBack = new MyItemTouchHelperCallBack(noteAdapter);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -220,14 +227,14 @@ public class NoteActivity extends AppCompatActivity {
     //搜索功能
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_note_preview, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        getMenuInflater().inflate(R.menu.menu_note_group, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_group_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             //当搜索栏中文本变化时调用此方法
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<Note> notes = noteDB.queryGroupItem(newText,groupId,userId);
+                List<Note> notes = noteDB.queryGroupItem(newText, groupId, userId);
                 mNoteList.clear();
                 for (Note note : notes) {
                     NotePreview notePreview = noteToNotePreview(note);
@@ -253,9 +260,66 @@ public class NoteActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else if (item.getItemId() == R.id.menu_group_title_edit) {
+            //弹窗编辑组名
+            showDialogEdit();
+        } else if (item.getItemId() == R.id.menu_group_delete) {
+
+            new AlertDialog.Builder(this)
+                    .setMessage("这会同时删除组中所有笔记，确定删除吗？")
+                    .setNegativeButton("取消", null)
+                    .setPositiveButton("确认", ((dialog, which) -> {
+                        deleteGroup();
+                    })).show();
+
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void deleteGroup() {
+        for (Note note:mNoteList) {
+            noteDB.delete(note, userId);
+        }
+        noteDB.deleteGroup(groupId, userId);
+        finish();
+    }
+
+    private void showDialogEdit() {
+        Dialog dialog = new Dialog(this);
+        DialogNoteGroupEditBinding editBinding = DialogNoteGroupEditBinding.inflate(getLayoutInflater());
+        dialog.setContentView(editBinding.getRoot());
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            window.setGravity(Gravity.CENTER);
+        }
+        NoteGroup group = noteDB.queryGroupById(groupId, userId);
+        String defaultTitle = group.getTitle();
+        editBinding.etDialogGroupTitle.setText(defaultTitle);
+        dialog.show();
+
+        editBinding.btnDialogCancel.setOnClickListener(view -> dialog.dismiss());
+        editBinding.btnDialogConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = editBinding.etDialogGroupTitle.getText().toString();
+                if (!AppUtils.isEmpty(title)) {
+                    group.setTitle(title);
+                    getSupportActionBar().setTitle(title);
+                    noteDB.updateGroup(group, userId);
+                    refreshData();
+                    Log.d("TAG", "(更改组名成功:)-->>" + title);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(NoteActivity.this, "组名不能为空！", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
     //获取actionbar高度

@@ -9,9 +9,10 @@ package notebook.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -29,6 +30,8 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 import notebook.AI.APIClient;
 import notebook.entity.User;
@@ -41,7 +44,7 @@ import okhttp3.Response;
 public class HomeActivity extends AppCompatActivity {
 
     String username;
-    Button btn_start;
+    ImageView btn_start;
     AppCompatButton btn_settings;
     Handler mHandler;
     ActivityHomeBinding homeBinding;
@@ -54,6 +57,14 @@ public class HomeActivity extends AppCompatActivity {
     int userId;
     User user;
     UserDB userDB;
+    boolean characterClickable = true;
+    Random random = new Random();
+
+    final int[] face = {
+            R.drawable.character_talking,
+            R.drawable.character_thinking,
+            R.drawable.character_shy
+    };
 
     @Override
 
@@ -77,12 +88,13 @@ public class HomeActivity extends AppCompatActivity {
     private void initData() {
         mURL = "https://api.deepseek.com/v1/chat/completions";
         originSetting = getString(R.string.origin_setting);
-        apiClient = new APIClient();
+        apiClient = new APIClient(HomeActivity.this);
         pages = new ArrayList<>();
+        mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
 
         userDB = new UserDB(HomeActivity.this);
         Intent intent = getIntent();
-        userId = intent.getIntExtra("user_id",-1);
+        userId = intent.getIntExtra("user_id", -1);
         user = userDB.getUserById(userId);
         username = user.getName();
         Log.d("TAG", "(user:)-->>" + user);
@@ -98,24 +110,45 @@ public class HomeActivity extends AppCompatActivity {
     private void initClick() {
         startNote();
         settings();
-        ask();
+        chat();
         btnLast();
         btnNext();
-        overChat();
+        characterClick();
 
     }
 
-    private void overChat() {
-        homeBinding.btnHomeFinish.setOnClickListener(new View.OnClickListener() {
+    private void characterClick() {
+        homeBinding.character.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (homeBinding.btnHomeFinish.getVisibility() == View.VISIBLE) {
-                    clear();
-                    homeBinding.btnHomeFinish.setVisibility(View.INVISIBLE);
-                    homeBinding.etHomeChatAsk.setVisibility(View.VISIBLE);
-                }
+                if (!characterClickable) return;
+
+                randomFacialChange();
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        homeBinding.character.setImageResource(R.drawable.character);
+                        characterClickable = true;
+                    }
+                }, 3000);
+
             }
         });
+    }
+
+    private void randomFacialChange() {
+        int sum = face.length;
+        int index = random.nextInt(sum);
+        homeBinding.character.setImageResource(face[index]);
+        characterClickable = false;
+    }
+
+    private void overChat() {
+        clear();
+        homeBinding.character.setImageResource(R.drawable.character);
+        homeBinding.etHomeChatAsk.setVisibility(View.VISIBLE);
+        characterClickable = true;
     }
 
     private void clear() {
@@ -132,8 +165,6 @@ public class HomeActivity extends AppCompatActivity {
                     if (currentPage < pages.size() - 1) {
                         currentPage++;
                         homeBinding.tvHomeChatResponse.setText(pages.get(currentPage));
-                    } else if (currentPage == pages.size() - 1) {
-                        homeBinding.btnHomeFinish.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -154,20 +185,22 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void ask() {
-        homeBinding.btnHomeSend.setOnClickListener(new View.OnClickListener() {
+    private void chat() {
+        homeBinding.btnHomeConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String prompt = homeBinding.etHomeChatAsk.getText().toString();
+                if (currentPage == pages.size() - 1) {
+                    overChat();
+                } else {
+                    String prompt = homeBinding.etHomeChatAsk.getText().toString();
 
-                if (AppUtils.isEmpty(prompt))return;
+                    if (AppUtils.isEmpty(prompt)) return;
 
-                homeBinding.etHomeChatAsk.setText(null);
-                homeBinding.etHomeChatAsk.setVisibility(View.INVISIBLE);
-                Log.d("TAG", "(ask:)-->>" + prompt);
-
-                getNetRequest(prompt);
-
+                    homeBinding.etHomeChatAsk.setText(null);
+                    homeBinding.etHomeChatAsk.setVisibility(View.INVISIBLE);
+                    Log.d("TAG", "(ask:)-->>" + prompt);
+                    getNetRequest(prompt);
+                }
             }
         });
     }
@@ -184,7 +217,7 @@ public class HomeActivity extends AppCompatActivity {
         btn_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppUtils.startActivityWithUserId(HomeActivity.this, UserActivity.class,userId);
+                AppUtils.startActivityWithUserId(HomeActivity.this, UserActivity.class, userId);
             }
         });
     }
@@ -200,7 +233,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void getNetRequest(String prompt) {
 
-        apiClient.getResponse(prompt,originSetting + "。用户的名字是" + username, mURL, new Callback() {
+        apiClient.getResponse(prompt, originSetting + "。用户的名字是" + username, mURL, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d("TAG", "(ask:response)-->>失败响应1");
@@ -216,8 +249,9 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d("TAG", "(ask:response)-->>成功响应" + "reply:" + result);
                     AppUtils.splitTextToPages(result, singleMax, pages);
                     runOnUiThread(() ->
-                            homeBinding.tvHomeChatResponse.setText(pages.get(0)));
+                    homeBinding.tvHomeChatResponse.setText(pages.get(0)));
                     currentPage = 0;
+                    characterChange();
                 } else {
                     Log.d("TAG", "(ask:response)-->>失败响应2");
                     runOnUiThread(() -> homeBinding.tvHomeChatResponse.setText("--无响应--"));
@@ -226,6 +260,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void characterChange() {
+        homeBinding.character.setImageResource(R.drawable.character_talking);
+        characterClickable = false;
     }
 
 }

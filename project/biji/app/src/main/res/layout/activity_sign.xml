@@ -6,18 +6,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:padding="15dp"
     tools:context="notebook.activities.LoginActivity">
+
+    <notebook.View.GradientBackgroundView
+        android:id="@+id/gradientBackgroundView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/login_sign"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gradientBackgroundView2"
+        app:layout_constraintVertical_bias="0.477"
+        app:layout_constraintWidth_percent="0.685" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:elevation="0dp"
+        app:cardCornerRadius="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.65"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:elevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:textStyle="italic"
+        android:text="此 间"
+        android:fontFamily="serif"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/gl_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45" />
+        app:layout_constraintGuide_percent="0.475" />
 
 
     <com.google.android.material.textfield.TextInputLayout
+        android:elevation="5dp"
         android:id="@+id/layout_uname_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +104,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+       android:elevation="5dp"
         android:id="@+id/layout_password_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,6 +132,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:elevation="5dp"
         android:id="@+id/tip_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,6 +146,7 @@
         app:layout_constraintVertical_bias="0.375" />
 
     <com.google.android.material.button.MaterialButton
+        android:elevation="5dp"
         android:id="@+id/button_sign"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -104,7 +162,20 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_password_sign"
         app:layout_constraintVertical_bias="0.18"
-        app:layout_constraintWidth_percent="0.4" />
+        app:layout_constraintWidth_percent="0.36" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:elevation="5dp"
+        android:id="@+id/btn_sign_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/btn_back_arrow_selector"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,6 +28,15 @@ public class SPUtils {
         }
     }
 
+    public static void editBoolean(SharedPreferences sp, String key, boolean value) {
+        if (sp != null) {
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putBoolean(key, value).apply();
+        } else {
+            Log.d("TAG","(SPUtils:edit)-->>" + "写入失败，sp为null");
+        }
+    }
+
     public static void editInt(SharedPreferences sp, String key, int value) {
         if (sp != null) {
             SharedPreferences.Editor edit = sp.edit();

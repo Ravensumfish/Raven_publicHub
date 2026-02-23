@@ -138,18 +138,17 @@ public class NoteDB extends SQLiteOpenHelper {
         return row;
     }
 
-    public long deleteGroup(NoteGroup group, int userId) {
+    public long deleteGroup(int groupId, int userId) {
 
         Log.d("TAG", "(deleteGroup:noteDB)-->>" + userId);
-        if (userId < 0) {
-
+        Log.d("TAG", "(delete:groupId:)-->>" + groupId);
+        if (userId < 0 || groupId < 0) {
             return -1;
         }
 
         SQLiteDatabase db = getWritableDatabase();
-        Log.d("TAG", "(groupId:)-->>" + group.getId());
         int row = db.delete(NOTE_GROUP_TABLE_NAME, "group_id = ? AND user_id = ?",
-                new String[]{String.valueOf(group.getId()),
+                new String[]{String.valueOf(groupId),
                         String.valueOf(userId)});
         if (row > 0) {
             Log.d("TAG", "(数据库noteGroup:成功删除)-->>");

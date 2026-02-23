@@ -149,7 +149,7 @@ public class NoteItemActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 Note note = addNote();
-                AppUtils.startActivityWithNote(requireActivity(), NoteDetailActivity.class, note);
+                AppUtils.startActivityWithNoteId(requireActivity(), NoteDetailActivity.class,note.getId());
             }
         });
     }
@@ -161,7 +161,7 @@ public class NoteItemActivity extends Fragment {
         long row = noteDB.insert(note,userId);
         if (row != -1) {
             Log.d("TAG", "(newNote:id)-->>" + note.getId());
-            Toast.makeText(requireContext(), "新增笔记成功", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "(newNote)-->>成功");
             return note;
         } else {
             Toast.makeText(requireContext(), "新增笔记失败", Toast.LENGTH_SHORT).show();

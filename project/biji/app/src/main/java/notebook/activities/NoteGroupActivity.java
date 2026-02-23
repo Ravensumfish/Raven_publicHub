@@ -48,7 +48,6 @@ import notebook.utils.SPUtils;
 
 public class NoteGroupActivity extends Fragment {
     ActivityNoteGroupBinding binding;
-    DialogNoteGroupEditBinding editBinding;
     RecyclerView mRv;
     ActionBar actionBar;
     NoteGroupAdapter noteAdapter;
@@ -78,7 +77,6 @@ public class NoteGroupActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ActivityNoteGroupBinding.inflate(inflater, container, false);
-        editBinding = DialogNoteGroupEditBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -168,6 +166,7 @@ public class NoteGroupActivity extends Fragment {
     //弹窗创建新组流程
     private void showDialog() {
         Dialog dialog = new Dialog(requireContext());
+        DialogNoteGroupEditBinding editBinding = DialogNoteGroupEditBinding.inflate(getLayoutInflater());
         dialog.setContentView(editBinding.getRoot());
         Window window = dialog.getWindow();
         if (window != null) {
@@ -179,21 +178,24 @@ public class NoteGroupActivity extends Fragment {
         }
         dialog.show();
 
-        editBinding.btnDialogCancel.setOnClickListener(view -> dialog.dismiss());
+        editBinding.btnDialogCancel.setOnClickListener(v -> dialog.dismiss());
         editBinding.btnDialogConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!AppUtils.isEmpty(editBinding.etDialogGroupTitle.getText().toString())) {
+                String title = editBinding.etDialogGroupTitle.getText().toString();
+                if (!AppUtils.isEmpty(title)) {
                     NoteGroup group = addGroup();
-                    String title = editBinding.etDialogGroupTitle.getText().toString();
                     if (group != null) {
                         group.setTitle(title);
                         noteDB.updateGroup(group, userId);
                         refreshData();
                     }
                     Log.d("TAG", "(设置组名成功:)-->>" + title);
+                    dialog.dismiss();
+
+                } else {
+                    Toast.makeText(requireContext(), "组名不能为空！", Toast.LENGTH_SHORT).show();
                 }
-                dialog.dismiss();
             }
         });
     }
@@ -302,18 +304,27 @@ public class NoteGroupActivity extends Fragment {
 
     private void dialogDelete(NoteGroup noteGroup) {
         new AlertDialog.Builder(requireContext())
-                .setMessage("确认删除吗？")
+                .setMessage("确认删除吗？(此行为不会删除组中笔记)")
                 .setPositiveButton("确认", (dialog, which) ->
                 {
-                    long row = noteDB.deleteGroup(noteGroup, userId);
-
-                    if (row > 0) {
-                        Toast.makeText(requireContext(), "成功删除", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(requireContext(), "删除失败", Toast.LENGTH_SHORT).show();
-                    }
-                    refreshData();
+                    deleteGroupExceptNote(noteGroup);
                 })
                 .setNegativeButton("取消", null).show();
+    }
+
+    private void deleteGroupExceptNote(NoteGroup noteGroup) {
+        List<Note> notes = noteDB.queryGroupItemAll(noteGroup.getId(),userId);
+        for (Note note:notes) {
+            note.setGroupId(-1);
+            noteDB.update(note, userId);
+        }
+        long row = noteDB.deleteGroup(noteGroup.getId(), userId);
+
+        if (row > 0) {
+            Toast.makeText(requireContext(), "成功删除", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "删除失败", Toast.LENGTH_SHORT).show();
+        }
+        refreshData();
     }
 }

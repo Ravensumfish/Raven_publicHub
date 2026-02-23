@@ -16,6 +16,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import notebook.entity.Note;
 import notebook.entity.User;
 
 public class UserDB extends SQLiteOpenHelper {
@@ -105,5 +106,24 @@ public class UserDB extends SQLiteOpenHelper {
         if (username == null || id < 0)return null;
 
         return new User(username, userId);
+    }
+
+    public long delete(int userId) {
+
+        Log.d("TAG", "(delete:noteDB)-->>" + userId);
+        if (userId < 0) {
+
+            return -1;
+        }
+
+        SQLiteDatabase db = getWritableDatabase();
+        int row = db.delete(USER_TABLE_NAME, "user_id = ?", new String[]{String.valueOf(userId)});
+        if (row > 0) {
+            Log.d("TAG", "(数据库user:成功删除)-->>");
+        } else {
+            Log.d("TAG", "(数据库user:删除失败)-->>");
+        }
+
+        return row;
     }
 }

@@ -8,6 +8,7 @@
 package notebook.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -114,6 +115,7 @@ public class AppUtils {
         return v.getMeasuredHeight();
     }
 
+    //排版一下网络请求得到的数据
     public static void splitTextToPages(String text, int singleLineMax, List<String> pages) {
         pages.clear();
         List<String> lines = new ArrayList<>();
@@ -125,6 +127,7 @@ public class AppUtils {
             if (c == '\n') {
                 lines.add(currentLine.toString());
                 Log.d("TAG", "(toLine:currentLine/n)-->>" + currentLine);
+                //这个方法可以重置builder
                 currentLine.setLength(0);
             } else if (currentLine.length() <= singleLineMax) {
                 //无换行符且字数不满则追加
@@ -155,6 +158,18 @@ public class AppUtils {
 
     }
 
+    public static void bubbleInt(int[] obj) {
+        int length = obj.length;
+        for (int i = 0; i < length - 1 ; i++) {
+            for (int j = 0; j < length - i - 1; j++) {
+                if (obj[j] > obj[j + 1]) {
+                    int temp = obj[j];
+                    obj[j] = obj[j + 1];
+                    obj[j + 1] = obj[j];
+                }
+            }
+        }
+    }
 }
 
 

@@ -9,6 +9,7 @@ package notebook.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.biji.R;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import notebook.activities.NoteActivity;
 import notebook.entity.NotePreview;
 import notebook.helper.ItemMoveListener;
 import notebook.sql.NoteDB;
+import notebook.utils.SPUtils;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> implements ItemMoveListener {
 
@@ -36,12 +39,26 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     private List<NotePreview> previews;
     private NoteDB noteDB;
     private int userId;
+    List<Long> noteOrder;
+    SharedPreferences mSp;
+    StringBuilder builder = new StringBuilder();
+    int groupId = -1;
 
-    public NoteAdapter(Context mContext, List<NotePreview> previews,int userId) {
+    public NoteAdapter(Context mContext, List<NotePreview> previews, int userId) {
         this.mContext = mContext;
         this.previews = previews;
         this.userId = userId;
         noteDB = new NoteDB(mContext);
+        mSp = SPUtils.getSpData(mContext);
+    }
+
+    public NoteAdapter(Context mContext, List<NotePreview> previews, int userId, int groupId) {
+        this.mContext = mContext;
+        this.previews = previews;
+        this.userId = userId;
+        this.groupId = groupId;
+        noteDB = new NoteDB(mContext);
+        mSp = SPUtils.getSpData(mContext);
     }
 
     //在adapter中实现拖动位移数据更新
@@ -50,6 +67,66 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         Collections.swap(previews, fromPos, toPos);
         notifyItemMoved(fromPos, toPos);
         return true;
+    }
+
+    @Override
+    public void itemMoveFinished() {
+        saveOrder();
+    }
+
+    //把顺序存成字符串，存入sp
+    private void saveOrder() {
+        builder.setLength(0);
+        for (int i = 0; i < previews.size(); i++) {
+            builder.append(previews.get(i).getId());
+            if (i < previews.size() - 1) {
+                builder.append(",");
+            }
+        }
+
+        if (groupId == -1) {
+            SPUtils.editString(mSp, "note_order", builder.toString());
+            Log.d("TAG", "(noteAdapter:order)-->>保存成功" + builder.toString());
+        } else {
+            SPUtils.editString(mSp, "note_order_" + groupId, builder.toString());
+            Log.d("TAG", "(noteAdapter:orderInGroup)-->>保存成功" + builder.toString());
+        }
+
+    }
+
+    //读取完成后更改noteList的顺序
+    private void updateOrder() {
+
+        previews.sort(new Comparator<NotePreview>() {
+            @Override
+            public int compare(NotePreview o1, NotePreview o2) {
+                int index1 = noteOrder.indexOf(o1.getId());
+                int index2 = noteOrder.indexOf(o2.getId());
+                //如果sp中查找不到（新笔记），把其设为第一
+                if (index1 == -1) index1 = Integer.MAX_VALUE;
+                if (index2 == -1) index2 = Integer.MAX_VALUE;
+                return Integer.compare(index1, index2);
+            }
+        });
+        Log.d("TAG", "(updateOrder:)-->>排序完成");
+
+    }
+
+    private void decodeOrder() {
+        String order;
+        if (groupId == -1) {
+            order = mSp.getString("note_order", null);
+        } else {
+            order = mSp.getString("note_order_" + groupId, null);
+        }
+        noteOrder = new ArrayList<>();
+        if (order != null) {
+            String[] id = order.split(",");
+            for (int i = 0; i < id.length; i++) {
+                //把笔记id按照sp中保存的顺序读取出来
+                noteOrder.add(Long.parseLong(id[i]));
+            }
+        }
     }
 
     //在adapter中实现左滑弹窗删除选项，确认后删除并更新数据
@@ -62,7 +139,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 .setPositiveButton("确认", (dialog, which) ->
                 {
                     NotePreview notePreview = previews.get(pos);
-                    long row = noteDB.delete(notePreview,userId);
+                    long row = noteDB.delete(notePreview, userId);
                     previews.remove(pos);
                     notifyItemRemoved(pos);
                     if (row > 0) {
@@ -74,6 +151,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 .setNegativeButton("取消", null).show();
     }
 
+
     public interface onItemClickListener {
         void onItemClick(NotePreview notePreview);
     }
@@ -84,8 +162,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         this.itemClickListener = itemClickListener;
     }
 
+    //刷新数据
     public void refreshData(List<NotePreview> previews) {
         this.previews = previews;
+        decodeOrder();
+        if (noteOrder != null) {
+            updateOrder();
+        }
         notifyDataSetChanged();
     }
 

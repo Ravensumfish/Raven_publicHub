@@ -9,6 +9,9 @@ package notebook.helper;
 public interface ItemMoveListener {
     boolean onItemMove(int fromPos,int toPos);
     void onItemRemove(int pos);
+
+    void itemMoveFinished();
+
 }
 
 

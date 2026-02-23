@@ -7,6 +7,7 @@
 package notebook.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,8 +42,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import notebook.entity.Note;
+import notebook.entity.NoteGroup;
 import notebook.entity.User;
+import notebook.sql.NoteDB;
 import notebook.sql.UserDB;
 import notebook.utils.AppUtils;
 import notebook.utils.SPUtils;
@@ -56,12 +61,13 @@ public class UserActivity extends AppCompatActivity {
     TextView tvIntroduce, tvId;
     TextView tvUsername;
     ImageView avatar;
-    Button btn_back;
+    Button btnBack,btnQuit,btnDelete;
     ActivityResultLauncher resultLauncher = permit();
     ActivityResultLauncher<String> selectImage = imageSelect();
     SharedPreferences mSp;
     DialogEditIntroduceBinding dialogBinding;
     String mIntroduce;
+    NoteDB noteDB;
 
 
     @Override
@@ -81,7 +87,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void initEvent() {
-        btn_back.setOnClickListener(new View.OnClickListener() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -99,6 +105,42 @@ public class UserActivity extends AppCompatActivity {
                 showEditDialog();
             }
         });
+        btnQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(UserActivity.this).setMessage("确认退出吗？")
+                        .setPositiveButton("确认",((dialog, which) -> toLoginActivity()))
+                        .setNegativeButton("取消",null).show();
+            }
+        });
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(UserActivity.this).setMessage("确认注销账号吗？（无法恢复）")
+                        .setPositiveButton("确认",((dialog, which) -> deleteAccount()))
+                        .setNegativeButton("取消",null).show();
+            }
+        });
+
+    }
+
+    private void deleteAccount() {
+        List<Note> notes = noteDB.queryAll(userId);
+        List<NoteGroup> groups = noteDB.queryAllGroups(userId);
+        for (Note note:notes) {
+            noteDB.delete(note, userId);
+        }
+        for (NoteGroup group:groups) {
+            noteDB.deleteGroup(group.getId(), userId);
+        }
+        userDB.delete(userId);
+        Toast.makeText(UserActivity.this, "注销成功", Toast.LENGTH_SHORT).show();
+        toLoginActivity();
+    }
+
+    private void toLoginActivity() {
+        SPUtils.editBoolean(mSp,"isAutoLogin",false);
+        AppUtils.startActivity(UserActivity.this,LoginActivity.class);
     }
 
     private void showEditDialog() {
@@ -155,13 +197,16 @@ public class UserActivity extends AppCompatActivity {
 
     private void initView() {
         tvUsername = findViewById(R.id.user_username);
-        btn_back = findViewById(R.id.btn_user_back);
+        btnBack = findViewById(R.id.btn_user_back);
         avatar = findViewById(R.id.avatar);
         tvIntroduce = findViewById(R.id.tv_user_introduce);
         tvId = findViewById(R.id.tv_user_id);
+        btnQuit = findViewById(R.id.btn_user_quit);
+        btnDelete = findViewById(R.id.btn_user_delete_account);
     }
 
     private void initData() {
+        noteDB = new NoteDB(this);
         userDB = new UserDB(this);
         Intent intent = getIntent();
         userId = intent.getIntExtra("user_id",-1);
