@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_banner"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:padding="5dp"
+        android:text="title"
+        android:textSize="35dp"
+        app:layout_constraintBottom_toTopOf="@id/author_banner"
+        app:layout_constraintLeft_toLeftOf="@id/image_banner"
+        app:layout_constraintStart_toStartOf="@+id/author_banner" />
+
+    <TextView
+        android:id="@+id/author_banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:maxLines="1"
+        android:padding="5dp"
+        android:text="作者/"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/image_banner"
+        app:layout_constraintLeft_toLeftOf="@id/image_banner"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/author_name_banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:padding="5dp"
+        android:text="author"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/author_banner"
+        app:layout_constraintLeft_toRightOf="@id/author_banner" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
