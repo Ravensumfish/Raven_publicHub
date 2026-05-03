@@ -1,17 +1,13 @@
-package com.example.zhihu.main
+package com.example.zhihu.main.pre
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.zhihu.R
+import com.example.zhihu.main.pre.adapter.BannerAdapter
+import com.example.zhihu.main.pre.adapter.NewsAdapter
 import com.example.zhihu.databinding.ActivityHomeBinding
-import com.example.zhihu.main.adapter.BannerAdapter
-import com.example.zhihu.main.adapter.NewsAdapter
 
 class HomeActivity : AppCompatActivity() {
     //创建binding
@@ -67,6 +63,11 @@ class HomeActivity : AppCompatActivity() {
         }
         viewModel.bannerList.observe(this) { list ->
             bannerAdapter.submitList(list)
+        }
+
+        //错误监听
+        viewModel.error.observe(this){message->
+            Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
         }
     }
 

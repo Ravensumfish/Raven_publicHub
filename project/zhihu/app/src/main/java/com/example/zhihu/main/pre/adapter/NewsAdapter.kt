@@ -1,10 +1,11 @@
-package com.example.zhihu.main.adapter
+package com.example.zhihu.main.pre.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zhihu.R
 import com.example.zhihu.main.model.BannerUIModel
@@ -30,10 +31,11 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     }
 
-    override fun onBindViewHolder(holder: NewsAdapter.NewsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val item = data[position]
         holder.title.text = item.title
         holder.author.text = item.author
+
 
     }
 

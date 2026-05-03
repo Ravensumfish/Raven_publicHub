@@ -1,4 +1,4 @@
-package com.example.zhihu.main.adapter
+package com.example.zhihu.main.pre.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -22,13 +22,13 @@ class BannerAdapter: RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BannerAdapter.BannerViewHolder {
+    ): BannerViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_banner,parent,false)
         return BannerViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BannerAdapter.BannerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
         val item = data[position]
         holder.title.text = item.title
         holder.author.text = item.author
