@@ -15,11 +15,13 @@
         tools:context=".main.HomeActivity">
 
         <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp2"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

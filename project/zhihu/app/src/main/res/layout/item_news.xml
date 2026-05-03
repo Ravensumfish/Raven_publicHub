@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:padding="10dp">
 
 
     <ImageView
@@ -19,22 +19,23 @@
         android:id="@+id/title_news"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
         android:maxLines="2"
         android:text="title"
-        android:textSize="30dp"
+        android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@id/author_news"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/author_news"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/author_news" />
 
     <TextView
         android:id="@+id/author_news"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
         android:maxLines="1"
         android:text="作者 ·"
-        android:textSize="16sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -44,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:text="author"
-        android:textSize="16sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/author_news"
         app:layout_constraintLeft_toRightOf="@id/author_news" />
 </androidx.constraintlayout.widget.ConstraintLayout>

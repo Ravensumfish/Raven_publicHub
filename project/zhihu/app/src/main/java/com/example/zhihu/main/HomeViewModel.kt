@@ -22,15 +22,15 @@ class HomeViewModel : ViewModel() {
     fun loadHomeData(){
         _bannerList.value = listOf(
             BannerUIModel(1,"小明","你好好好好好好好好好好好好好好",""),
-            BannerUIModel(1,"小明","嗯嗯呢嗯呢呢咩咩咩咩咩咩咩咩吗买买买",""),
-            BannerUIModel(1,"小明","你好","")
+            BannerUIModel(2,"小明","嗯嗯呢嗯呢呢咩咩咩咩咩咩咩咩吗买买买",""),
+            BannerUIModel(3,"小明","你好","")
 
         )
 
         _newsList.value = listOf(
             NewsUIModel(1,"小明","你好好好好好好好好好好好好好好",""),
-            NewsUIModel(1,"小明","嗯嗯呢嗯呢呢咩咩咩咩咩咩咩咩吗买买买",""),
-            NewsUIModel(1,"小明","你好","")
+            NewsUIModel(2,"小明","嗯嗯呢嗯呢呢咩咩咩咩咩咩咩咩吗买买买",""),
+            NewsUIModel(3,"小明","你好","")
         )
     }
 }
