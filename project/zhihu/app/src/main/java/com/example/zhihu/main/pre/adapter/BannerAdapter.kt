@@ -15,8 +15,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zhihu.R
-import com.example.zhihu.main.model.BannerUIModel
-import com.example.zhihu.main.model.NewsUIModel
+import com.example.zhihu.main.pre.model.BannerUIModel
 
 class BannerAdapter: RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
     //用于刷新banner

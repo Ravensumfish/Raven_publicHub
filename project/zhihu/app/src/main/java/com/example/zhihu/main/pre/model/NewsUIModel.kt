@@ -5,6 +5,6 @@
  * date:2026/5/3
  */
 
-package com.example.zhihu.main.model
+package com.example.zhihu.main.pre.model
 
 data class NewsUIModel(val id: Int, val author: String, val title: String, val imageUrl: String)

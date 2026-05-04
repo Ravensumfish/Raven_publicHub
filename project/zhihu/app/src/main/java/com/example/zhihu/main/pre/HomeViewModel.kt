@@ -13,8 +13,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.zhihu.data.repository.NewsRepository
-import com.example.zhihu.main.model.BannerUIModel
-import com.example.zhihu.main.model.NewsUIModel
+import com.example.zhihu.main.pre.model.BannerUIModel
+import com.example.zhihu.main.pre.model.NewsUIModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
@@ -35,18 +35,26 @@ class HomeViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
+    private var currentDate:String? = null
+    private var isLoading = false
+
     fun loadHomeData() {
         viewModelScope.launch {
             loadBanner()
             loadNews()
-
         }
+    }
+
+    fun refresh(){
+        currentDate = null
+        loadHomeData()
     }
 
     private suspend fun loadNews() {
         try {
             //得到请求，并与实体类的成员变量一一对应
             val response = repository.getNews()
+            currentDate = response.date
             val newsUIList = response.stories.map { story ->
                 NewsUIModel(
                     id = story.id,
@@ -83,6 +91,38 @@ class HomeViewModel : ViewModel() {
         }catch (e: Exception){
             _error.value = e.message?:"请求失败"
             Log.d("NET","(ViewModel:请求banner)-->>失败")
+        }
+    }
+
+    fun loadMore(){
+        if (isLoading)return
+
+        isLoading = true
+        val date = currentDate?:return
+
+        viewModelScope.launch {
+            try {
+                val response = repository.getBeforeNews(date)
+                currentDate = response.date
+
+                val moreList = response.stories.map {story->
+                    NewsUIModel(
+                        id = story.id,
+                        author = story.hint,
+                        title = story.title,
+                        imageUrl = story.images?.firstOrNull() ?: ""
+                    )
+                }
+
+                val currentList = _newsList.value.orEmpty()
+                _newsList.value = currentList + moreList
+            }catch (e: Exception){
+                _error.value = e.message?:"请求失败"
+                Log.d("NET","(ViewModel:请求more)-->>失败")
+            }finally {
+                isLoading = false
+            }
+
         }
     }
 }

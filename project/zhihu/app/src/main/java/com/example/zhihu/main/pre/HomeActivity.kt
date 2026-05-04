@@ -1,5 +1,6 @@
 package com.example.zhihu.main.pre
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,8 +9,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.zhihu.databinding.ActivityHomeBinding
+import com.example.zhihu.main.detail.DetailActivity
 import com.example.zhihu.main.pre.adapter.BannerAdapter
 import com.example.zhihu.main.pre.adapter.NewsAdapter
 import kotlinx.coroutines.Runnable
@@ -57,7 +60,37 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initEvent() {
+        pullToRefresh()
+        pullToLoad()
         autoPlay()
+    }
+
+    private fun pullToLoad() {
+        binding.rv.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisible = layoutManager.findLastVisibleItemPosition()
+                val total = layoutManager.itemCount
+                if (lastVisible == total - 1 ){
+                    viewModel.loadMore()
+                }
+            }
+
+        })
+    }
+
+    private fun pullToRefresh() {
+        //保证只有在顶部才能下拉刷新
+        binding.swipeRefresh.setOnChildScrollUpCallback { _,_->
+            val rvCanScroll = binding.rv.canScrollVertically(-1)
+            val bannerCollapsed = binding.appBar.top < 0
+
+            rvCanScroll || bannerCollapsed
+        }
+        //具体刷新逻辑
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refresh()
+        }
     }
 
     private fun autoPlay() {
@@ -82,8 +115,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initClick() {
-        newsAdapter.onItemClick = { pos ->
+        newsAdapter.onItemClick = onItemClick@{ pos ->
             val item = newsAdapter.getItem(pos)
+            val list = viewModel.newsList.value?:return@onItemClick
+
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("id",item.id)
+            startActivity(intent)
             Toast.makeText(this, "点击了news${item.id}", Toast.LENGTH_SHORT).show()
 
         }
@@ -91,8 +129,6 @@ class HomeActivity : AppCompatActivity() {
         bannerAdapter.onItemClick = { pos ->
             val item = bannerAdapter.getItem(pos)
             Toast.makeText(this, "点击了banner${item.id}", Toast.LENGTH_SHORT).show()
-            //网络请求异步，若要打印相关信息应该在这里
-            Log.d("TAG", "(itemCount:)-->>${bannerAdapter.itemCount}")
         }
     }
 
@@ -110,9 +146,14 @@ class HomeActivity : AppCompatActivity() {
         //当viewModel里的列表有变化，这里会自动刷新
         viewModel.newsList.observe(this) { list ->
             newsAdapter.submitList(list)
+            binding.swipeRefresh.isRefreshing = false
+            Log.d("TAG","(refresh:news)-->>刷新完毕");
         }
         viewModel.bannerList.observe(this) { list ->
             bannerAdapter.submitList(list)
+            binding.swipeRefresh.isRefreshing = false
+            //网络请求异步，若要打印相关信息应该在这里
+            Log.d("TAG", "(itemCount:)-->>${bannerAdapter.itemCount}")
         }
 
         //错误监听
