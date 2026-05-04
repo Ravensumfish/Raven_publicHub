@@ -7,4 +7,4 @@
 
 package com.example.zhihu.data.model
 
-data class NewsResponse(val date:String,val stories : List<Story>)
+data class NewsResponse(val date:String,val stories : List<Story>,val top_stories : List<TopStory>)

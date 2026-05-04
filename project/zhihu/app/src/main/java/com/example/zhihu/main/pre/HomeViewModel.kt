@@ -37,37 +37,52 @@ class HomeViewModel : ViewModel() {
 
     fun loadHomeData() {
         viewModelScope.launch {
-            try {
-                //得到请求，并与实体类的成员变量一一对应
-                val response = repository.getNews()
-                val uiList = response.stories.map { story ->
-                    NewsUIModel(
-                        id = story.id,
-                        author = story.hint,
-                        title = story.title,
-                        imageUrl = story.images?.firstOrNull() ?: ""
-                    )
-                }
-                Log.d("NET","(ViewModel:请求news)-->>成功")
+            loadBanner()
+            loadNews()
 
-                _newsList.value = uiList
-            }catch (e: Exception){
-                _error.value = e.message?:"请求失败"
-                Log.d("NET","(ViewModel:请求news)-->>失败")
+        }
+    }
+
+    private suspend fun loadNews() {
+        try {
+            //得到请求，并与实体类的成员变量一一对应
+            val response = repository.getNews()
+            val newsUIList = response.stories.map { story ->
+                NewsUIModel(
+                    id = story.id,
+                    author = story.hint,
+                    title = story.title,
+                    imageUrl = story.images?.firstOrNull() ?: ""
+                )
             }
+            Log.d("NET","(ViewModel:请求news)-->>成功")
+            Log.d("NET", "(ViewModel:请求news)-->>成功--$response")
+
+            _newsList.value = newsUIList
+        }catch (e: Exception){
+            _error.value = e.message?:"请求失败"
+            Log.d("NET","(ViewModel:请求news)-->>失败")
+        }
+    }
+
+    private suspend fun loadBanner() {
+        try {
+            //得到请求，并与实体类的成员变量一一对应
+            val response = repository.getNews()
+            val bannerUIList = response.top_stories.map { story ->
+                BannerUIModel(
+                    id = story.id,
+                    author = story.hint,
+                    title = story.title,
+                    imageUrl = story.image
+                )
+            }
+            Log.d("NET","(ViewModel:请求banner)-->>成功")
+            Log.d("NET", "(ViewModel:请求banner)-->>成功--$response")
+            _bannerList.value = bannerUIList
+        }catch (e: Exception){
+            _error.value = e.message?:"请求失败"
+            Log.d("NET","(ViewModel:请求banner)-->>失败")
         }
     }
 }
-
-//        _bannerList.value = listOf(
-//            BannerUIModel(1, "小明", "你好好好好好好好好好好好好好好", ""),
-//            BannerUIModel(2, "小明", "嗯嗯呢嗯呢呢咩咩咩咩咩咩咩咩吗买买买", ""),
-//            BannerUIModel(3, "小明", "你好", "")
-//
-//        )
-//
-//        _newsList.value = listOf(
-//            NewsUIModel(1, "小明", "你好好好好好好好好好好好好好好", ""),
-//            NewsUIModel(2, "小明", "嗯嗯呢嗯呢呢咩咩咩咩咩咩咩咩吗买买买", ""),
-//            NewsUIModel(3, "小明", "你好", "")
-//        )

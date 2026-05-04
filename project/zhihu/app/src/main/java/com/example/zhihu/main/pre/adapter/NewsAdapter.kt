@@ -1,3 +1,10 @@
+/**
+ * description: news列表适配器
+ * author:Manticore
+ * email:3100776336@qq.com
+ * date:2026/5/3
+ */
+
 package com.example.zhihu.main.pre.adapter
 
 import android.view.LayoutInflater
@@ -7,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.zhihu.R
 import com.example.zhihu.main.model.BannerUIModel
 import com.example.zhihu.main.model.NewsUIModel
@@ -36,6 +44,12 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
         holder.title.text = item.title
         holder.author.text = item.author
 
+        Glide.with(holder.itemView.context)
+            .load(item.imageUrl)
+            .placeholder(R.mipmap.ic_launcher)
+            .error(R.mipmap.ic_launcher)
+            .centerCrop()
+            .into(holder.image)
 
     }
 

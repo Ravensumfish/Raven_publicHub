@@ -1,3 +1,10 @@
+/**
+ * description: banner适配器
+ * author:Manticore
+ * email:3100776336@qq.com
+ * date:2026/5/3
+ */
+
 package com.example.zhihu.main.pre.adapter
 
 import android.view.LayoutInflater
@@ -6,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.zhihu.R
 import com.example.zhihu.main.model.BannerUIModel
 import com.example.zhihu.main.model.NewsUIModel
@@ -32,6 +40,11 @@ class BannerAdapter: RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
         val item = data[position]
         holder.title.text = item.title
         holder.author.text = item.author
+
+        Glide.with(holder.itemView.context)
+            .load(item.imageUrl)
+            .centerCrop()
+            .into(holder.image)
     }
 
     override fun getItemCount(): Int {
