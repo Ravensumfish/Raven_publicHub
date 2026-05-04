@@ -14,7 +14,6 @@ class DetailViewModel : ViewModel() {
 
     private val detailMap = mutableMapOf<Int, NewsDetail>()
     private val repository = NewsRepository()
-
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 

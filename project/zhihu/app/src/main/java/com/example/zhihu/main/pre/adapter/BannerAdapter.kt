@@ -54,6 +54,10 @@ class BannerAdapter: RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
         return data[position]
     }
 
+    fun getIdList(): ArrayList<Int>{
+        return ArrayList(data.map { it.id })
+    }
+
     var onItemClick :((Int)-> Unit)? = null
     inner class BannerViewHolder(item: View): RecyclerView.ViewHolder(item){
         val title: TextView = item.findViewById(R.id.title_banner)

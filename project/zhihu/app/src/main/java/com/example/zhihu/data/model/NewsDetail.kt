@@ -4,5 +4,5 @@ data class NewsDetail(
     val body:String,
     val css: List<String>,
     val image : String?,
-    val title : String
+    val title : String,
 )

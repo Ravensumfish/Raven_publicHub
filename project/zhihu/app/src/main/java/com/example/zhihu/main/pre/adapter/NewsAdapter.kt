@@ -59,6 +59,10 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
         return data[position]
     }
 
+    fun getIdList(): ArrayList<Int>{
+        return ArrayList(data.map { it.id })
+    }
+
     var onItemClick: ((Int) -> Unit)? = null
 
     inner class NewsViewHolder(item: View) : RecyclerView.ViewHolder(item) {
