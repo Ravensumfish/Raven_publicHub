@@ -1,3 +1,11 @@
+/**
+ * description: commentActivity
+ * author:Manticore
+ * email:3100776336@qq.com
+ * date:2026/5/5
+ */
+
+
 package com.example.zhihu.main.comment
 
 import android.os.Bundle

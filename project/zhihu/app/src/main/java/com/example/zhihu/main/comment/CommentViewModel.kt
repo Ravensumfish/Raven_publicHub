@@ -1,5 +1,12 @@
-package com.example.zhihu.main.comment
 
+/**
+ * description: comment数据管理
+ * author:Manticore
+ * email:3100776336@qq.com
+ * date:2026/5/5
+ */
+
+package com.example.zhihu.main.comment
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
