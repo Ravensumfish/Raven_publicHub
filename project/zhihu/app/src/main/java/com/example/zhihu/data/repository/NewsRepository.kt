@@ -8,8 +8,10 @@
 package com.example.zhihu.data.repository
 
 import com.example.zhihu.data.api.RetrofitClient
+import com.example.zhihu.data.model.Comments
 import com.example.zhihu.data.model.NewsDetail
 import com.example.zhihu.data.model.NewsResponse
+import com.example.zhihu.data.model.ShortComment
 
 class NewsRepository {
     private val api = RetrofitClient.apiService
@@ -18,6 +20,10 @@ class NewsRepository {
     }
     suspend fun getNews(id:Int): NewsDetail{
         return api.getNews(id)
+    }
+
+    suspend fun getShortComments(id:Int): Comments{
+        return api.getShortComments(id)
     }
 
     suspend fun getBeforeNews(date:String): NewsResponse{

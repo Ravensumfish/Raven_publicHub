@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".main.comment.CommentActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:background="@color/gary1"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/toolbar_comment"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
+            app:title="评论"
+            app:titleTextColor="@color/black" />
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="10dp"
+            android:id="@+id/comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="n条短评"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+</layout>

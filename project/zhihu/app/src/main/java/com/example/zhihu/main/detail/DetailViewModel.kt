@@ -1,3 +1,10 @@
+/**
+ * description: 管理数据与具体逻辑
+ * author:Manticore
+ * email:3100776336@qq.com
+ * date:2026/5/4
+ */
+
 package com.example.zhihu.main.detail
 
 import androidx.lifecycle.LiveData

@@ -1,3 +1,10 @@
+/**
+ * description: 主页面
+ * author:Manticore
+ * email:3100776336@qq.com
+ * date:2026/5/3
+ */
+
 package com.example.zhihu.main.pre
 
 import android.content.Intent
@@ -67,7 +74,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun pullToLoad() {
-        binding.rv.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rvHome.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisible = layoutManager.findLastVisibleItemPosition()
@@ -83,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
     private fun pullToRefresh() {
         //保证只有在顶部才能下拉刷新
         binding.swipeRefresh.setOnChildScrollUpCallback { _,_->
-            val rvCanScroll = binding.rv.canScrollVertically(-1)
+            val rvCanScroll = binding.rvHome.canScrollVertically(-1)
             val bannerCollapsed = binding.appBar.top < 0
 
             rvCanScroll || bannerCollapsed
@@ -118,25 +125,23 @@ class HomeActivity : AppCompatActivity() {
     private fun initClick() {
         newsAdapter.onItemClick = onItemClick@{ pos ->
             val item = newsAdapter.getItem(pos)
-            val list = viewModel.newsList.value?:return@onItemClick
 
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("id",item.id)
             intent.putIntegerArrayListExtra("id_list",newsAdapter.getIdList())
             startActivity(intent)
-            Toast.makeText(this, "点击了news${item.id}", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "点击了news${item.id}", Toast.LENGTH_SHORT).show()
 
         }
 
         bannerAdapter.onItemClick = onItemClick@{ pos ->
             val item = bannerAdapter.getItem(pos)
-            val list = viewModel.bannerList.value?:return@onItemClick
 
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("id",item.id)
             intent.putIntegerArrayListExtra("id_list",bannerAdapter.getIdList())
             startActivity(intent)
-            Toast.makeText(this, "点击了banner${item.id}", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "点击了banner${item.id}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -199,7 +204,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel.bannerList.observe(this) { list ->
             bannerAdapter.submitList(list)
             binding.swipeRefresh.isRefreshing = false
-            //网络请求异步，若要打印相关信息应该在这里
+            //网络请求异步，若要打印相关信息应该在这里(submit数据之后）
             Log.d("TAG", "(itemCount:)-->>${bannerAdapter.itemCount}")
         }
 
@@ -211,8 +216,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        binding.rv.layoutManager = LinearLayoutManager(this)
-        binding.rv.adapter = newsAdapter
+        binding.rvHome.layoutManager = LinearLayoutManager(this)
+        binding.rvHome.adapter = newsAdapter
     }
 
     private fun initVp2() {

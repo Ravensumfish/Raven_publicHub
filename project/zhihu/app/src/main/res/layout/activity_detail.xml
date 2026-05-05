@@ -29,7 +29,78 @@
             app:layout_constraintStart_toStartOf="@+id/vp2_detail"
             app:layout_constraintTop_toTopOf="@+id/vp2_detail" />
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:backgroundTint="@color/gary1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/back_detail"
+                    android:layout_weight="0.03"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/baseline_keyboard_arrow_left_24"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="2dp" />
+
+                <ImageView
+                    android:layout_weight="0.002"
+                    android:layout_width="2dp"
+                    android:layout_height="30dp"
+                    android:src="@color/gary"
+                    android:layout_marginStart="8dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_weight="0.03"
+                    android:id="@+id/comment_detail"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/baseline_comment_24"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="2dp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.9"
+                    android:layout_height="0dp"
+                    android:src="@color/gary"
+                    android:layout_marginStart="8dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_weight="0.03"
+                    android:id="@+id/share_detail"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/baseline_ios_share_24"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="2dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </layout>

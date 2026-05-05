@@ -63,7 +63,6 @@ class HomeViewModel : ViewModel() {
                     imageUrl = story.images?.firstOrNull() ?: ""
                 )
             }
-            Log.d("NET","(ViewModel:请求news)-->>成功")
             Log.d("NET", "(ViewModel:请求news)-->>成功--$response")
 
             _newsList.value = newsUIList
@@ -85,7 +84,6 @@ class HomeViewModel : ViewModel() {
                     imageUrl = story.image
                 )
             }
-            Log.d("NET","(ViewModel:请求banner)-->>成功")
             Log.d("NET", "(ViewModel:请求banner)-->>成功--$response")
             _bannerList.value = bannerUIList
         }catch (e: Exception){
