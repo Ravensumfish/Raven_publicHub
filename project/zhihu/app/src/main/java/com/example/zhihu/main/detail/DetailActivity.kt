@@ -28,7 +28,7 @@ import com.example.zhihu.main.comment.CommentActivity
 
 class DetailActivity : AppCompatActivity() {
 
-    private val BASE_URL = "https://news-at.zhihu.com/"
+    private val BASE_URL = "https://daily.zhihu.com/story/"
     private lateinit var binding: ActivityDetailBinding
     private lateinit var adapter: PagerAdapter
     private val viewModel: DetailViewModel by viewModels()
@@ -100,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun share() {
         binding.shareDetail.setOnClickListener { v ->
-            shareContent(this,"知乎日报",BASE_URL+"api/4/story/$currentId")
+            shareContent(this,"知乎日报",BASE_URL+"$currentId")
         }
     }
 

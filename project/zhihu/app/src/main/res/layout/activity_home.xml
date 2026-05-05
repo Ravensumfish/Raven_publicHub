@@ -20,13 +20,13 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="80dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:gravity="center|start">
+                android:gravity="bottom|start">
 
                 <TextView
                     android:id="@+id/tv_day"
