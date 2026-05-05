@@ -35,6 +35,8 @@
 <img width="220" height="458" alt="mmexport1777980804693" src="https://github.com/user-attachments/assets/e2e1fdf7-2793-454a-b24d-aab8019c50c1" />
 
 ### 查看短评
+评论分为短评和长评，具体实现如出一辙，所以只做了短评的展示
+
 <img width="220" height="478" alt="mmexport1777980832265" src="https://github.com/user-attachments/assets/cafdd69e-91fb-43a8-9592-c6aeb0b5cbf4" />
 
 ### 分享
@@ -45,4 +47,4 @@
 
 
 ## 总结
-仅用于学习与仿写练习，数据来源知乎api。
+仅用于学习与仿写练习，数据来源知乎api。学会了mvvm架构，把ui，网络请求，数据管理分开，每个类的职责清楚明了，效率提升很多（虽然仍然不熟练继续写石山
