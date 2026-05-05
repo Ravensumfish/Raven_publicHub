@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.DialogTitle
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.example.zhihu.R
 import com.example.zhihu.data.repository.NewsRepository
 import com.example.zhihu.databinding.ActivityDetailBinding
@@ -58,7 +59,17 @@ class DetailActivity : AppCompatActivity() {
         Log.d("TAG","(listCount:)-->>${idList.size}")
 
         observeViewModel()
+        upDateID()
         loadDetailPage(idList, currentId)
+    }
+
+    private fun upDateID() {
+        binding.vp2Detail.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                currentId = idList[position]
+            }
+        })
     }
 
     private fun loadDetailPage(list: ArrayList<Int>, id: Int) {

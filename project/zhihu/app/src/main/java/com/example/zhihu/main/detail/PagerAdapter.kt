@@ -35,6 +35,10 @@ class PagerAdapter : RecyclerView.Adapter<PagerAdapter.PagerViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun currentList() : List<NewsDetail> {
+        return data
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
